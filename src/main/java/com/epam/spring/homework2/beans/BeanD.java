@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 public class BeanD extends Bean {
 
     public BeanD() {
-        super();
+
     }
 
     public BeanD(String name, int value) {

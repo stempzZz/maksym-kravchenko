@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class BeanA extends Bean implements InitializingBean, DisposableBean {
 
     public BeanA() {
-        super();
+
     }
 
     public BeanA(String name, int value) {
