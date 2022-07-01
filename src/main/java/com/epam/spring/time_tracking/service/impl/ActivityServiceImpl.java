@@ -1,6 +1,7 @@
 package com.epam.spring.time_tracking.service.impl;
 
 import com.epam.spring.time_tracking.dto.activity.ActivityDto;
+import com.epam.spring.time_tracking.dto.activity.ActivityForUserDto;
 import com.epam.spring.time_tracking.dto.activity.ActivityInputDto;
 import com.epam.spring.time_tracking.dto.category.CategoryDto;
 import com.epam.spring.time_tracking.dto.user.UserInActivityDto;
@@ -59,6 +60,15 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
+    public List<ActivityForUserDto> getActivitiesForUser(int userId) {
+        List<UserActivity> activities = userActivityRepo.getActivitiesForUser(userId);
+        return activities.stream()
+                .map(UserActivity::getActivity)
+                .map(activity -> modelMapper.map(activity, ActivityForUserDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<UserInActivityDto> getActivityUsers(int activityId) {
         List<UserActivity> users = userActivityRepo.getActivityUsers(activityId);
         return users.stream()
@@ -75,6 +85,12 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public void removeUserFromActivity(int activityId, int userId) {
         userActivityRepo.removeUserFromActivity(activityId, userId);
+    }
+
+    @Override
+    public UserInActivityDto getUserInActivity(int activityId, int userId) {
+        UserActivity user = userActivityRepo.getUserInActivity(activityId, userId);
+        return modelMapper.map(user, UserInActivityDto.class);
     }
 
     private Activity activityWithSetCategories(ActivityInputDto activityInputDto) {

@@ -2,7 +2,10 @@ package com.epam.spring.time_tracking.repository.impl;
 
 import com.epam.spring.time_tracking.model.Activity;
 import com.epam.spring.time_tracking.model.Category;
+import com.epam.spring.time_tracking.model.UserActivity;
 import com.epam.spring.time_tracking.repository.ActivityRepo;
+import com.epam.spring.time_tracking.repository.UserActivityRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -19,7 +22,7 @@ public class ActivityRepoImpl implements ActivityRepo {
     @Override
     public Activity createActivity(Activity activity) {
         activity.setId(++idCounter);
-        if (activity.getCategories() == null)
+        if (activity.getCategories() == null || activity.getCategories().isEmpty())
             activity.setCategories(List.of(Category.builder().nameEN("Other").nameUA("Інше").build()));
         activity.setCreateTime(LocalDateTime.now());
         activityList.add(activity);

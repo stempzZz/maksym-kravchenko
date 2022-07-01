@@ -1,8 +1,8 @@
 package com.epam.spring.time_tracking.controller;
 
 import com.epam.spring.time_tracking.dto.activity.ActivityDto;
+import com.epam.spring.time_tracking.dto.activity.ActivityForUserDto;
 import com.epam.spring.time_tracking.dto.activity.ActivityInputDto;
-import com.epam.spring.time_tracking.dto.activity.ActivityViewDto;
 import com.epam.spring.time_tracking.dto.user.UserInActivityDto;
 import com.epam.spring.time_tracking.service.ActivityService;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +46,16 @@ public class ActivityController {
     public ResponseEntity<Void> removeUserFromActivity(@PathVariable int activityId, @PathVariable int userId) {
         activityService.removeUserFromActivity(activityId, userId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/activity/user/{userId}")
+    public List<ActivityForUserDto> getActivitiesForUser(@PathVariable int userId) {
+        return activityService.getActivitiesForUser(userId);
+    }
+
+    @GetMapping("/activity/{activityId}/user/{userId}")
+    public UserInActivityDto getUserInActivity(@PathVariable int activityId, @PathVariable int userId) {
+        return activityService.getUserInActivity(activityId, userId);
     }
 
     @PutMapping("/activity/{activityId}")

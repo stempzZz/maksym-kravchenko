@@ -11,4 +11,8 @@ public interface UserActivityRepo {
     UserActivity addUserToActivity(int activityId, int userId);
 
     void removeUserFromActivity(int activityId, int userId);
+
+    List<UserActivity> getActivitiesForUser(int userId);
+
+    UserActivity getUserInActivity(int activityId, int userId);
 }

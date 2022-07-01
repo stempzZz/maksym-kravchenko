@@ -46,4 +46,23 @@ public class UserActivityRepoImpl implements UserActivityRepo {
         userActivityList.removeIf(userActivity -> userActivity.getActivity().getId() == activityId &&
                 userActivity.getUser().getId() == userId);
     }
+
+    @Override
+    public List<UserActivity> getActivitiesForUser(int userId) {
+        return userActivityList.stream()
+                .filter(userActivity -> userActivity.getUser().getId() == userId)
+                .filter(userActivity -> userActivity.getActivity().getStatus().equals(Activity.Status.BY_ADMIN) ||
+                        userActivity.getActivity().getStatus().equals(Activity.Status.BY_USER) ||
+                        userActivity.getActivity().getStatus().equals(Activity.Status.DEL_WAITING))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserActivity getUserInActivity(int activityId, int userId) {
+        return userActivityList.stream()
+                .filter(userActivity -> userActivity.getActivity().getId() == activityId &&
+                        userActivity.getUser().getId() == userId)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("user doesn't exist in activity"));
+    }
 }
