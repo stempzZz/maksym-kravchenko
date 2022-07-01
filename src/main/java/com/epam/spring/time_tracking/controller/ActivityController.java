@@ -3,6 +3,7 @@ package com.epam.spring.time_tracking.controller;
 import com.epam.spring.time_tracking.dto.activity.ActivityDto;
 import com.epam.spring.time_tracking.dto.activity.ActivityForUserDto;
 import com.epam.spring.time_tracking.dto.activity.ActivityInputDto;
+import com.epam.spring.time_tracking.dto.user.UserDto;
 import com.epam.spring.time_tracking.dto.user.UserInActivityDto;
 import com.epam.spring.time_tracking.service.ActivityService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,11 @@ public class ActivityController {
         return activityService.getActivity(activityId);
     }
 
+    @GetMapping("/activity/{activityId}/user/available")
+    public List<UserDto> getUsersNotInActivity(@PathVariable int activityId) {
+        return activityService.getUsersNotInActivity(activityId);
+    }
+
     @GetMapping("/activity/{activityId}/user")
     public List<UserInActivityDto> getActivityUsers(@PathVariable int activityId) {
         return activityService.getActivityUsers(activityId);
@@ -56,6 +62,16 @@ public class ActivityController {
     @GetMapping("/activity/{activityId}/user/{userId}")
     public UserInActivityDto getUserInActivity(@PathVariable int activityId, @PathVariable int userId) {
         return activityService.getUserInActivity(activityId, userId);
+    }
+
+    @PostMapping("/activity/{activityId}/user/{userId}/start")
+    public UserInActivityDto startActivity(@PathVariable int activityId, @PathVariable int userId) {
+        return activityService.startActivity(activityId, userId);
+    }
+
+    @PostMapping("/activity/{activityId}/user/{userId}/stop")
+    public UserInActivityDto stopActivity(@PathVariable int activityId, @PathVariable int userId) {
+        return activityService.stopActivity(activityId, userId);
     }
 
     @PutMapping("/activity/{activityId}")

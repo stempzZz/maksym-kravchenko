@@ -9,7 +9,10 @@ import com.epam.spring.time_tracking.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,5 +67,28 @@ public class UserActivityRepoImpl implements UserActivityRepo {
                         userActivity.getUser().getId() == userId)
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("user doesn't exist in activity"));
+    }
+
+    @Override
+    public UserActivity startActivity(int activityId, int userId) {
+        UserActivity userActivity = getUserInActivity(activityId, userId);
+        userActivity.setStartTime(LocalDateTime.now());
+        userActivity.setStopTime(null);
+        userActivity.setStatus(UserActivity.Status.STARTED);
+        return userActivity;
+    }
+
+    @Override
+    public UserActivity stopActivity(int activityId, int userId) {
+        UserActivity userActivity = getUserInActivity(activityId, userId);
+        userActivity.setStopTime(LocalDateTime.now());
+
+        double spentTime = Duration.between(userActivity.getStartTime(), userActivity.getStopTime()).toMillis();
+        spentTime = Double.parseDouble(String.format("%.1f", spentTime / 1000.0/ 60.0/ 60.0));
+
+        userActivity.setSpentTime(userActivity.getSpentTime() + spentTime);
+        userActivity.getUser().setSpentTime(userActivity.getUser().getSpentTime() + spentTime);
+        userActivity.setStatus(UserActivity.Status.STOPPED);
+        return userActivity;
     }
 }

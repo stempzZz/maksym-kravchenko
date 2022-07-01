@@ -15,4 +15,8 @@ public interface UserActivityRepo {
     List<UserActivity> getActivitiesForUser(int userId);
 
     UserActivity getUserInActivity(int activityId, int userId);
+
+    UserActivity startActivity(int activityId, int userId);
+
+    UserActivity stopActivity(int activityId, int userId);
 }

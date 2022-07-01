@@ -4,13 +4,16 @@ import com.epam.spring.time_tracking.dto.activity.ActivityDto;
 import com.epam.spring.time_tracking.dto.activity.ActivityForUserDto;
 import com.epam.spring.time_tracking.dto.activity.ActivityInputDto;
 import com.epam.spring.time_tracking.dto.category.CategoryDto;
+import com.epam.spring.time_tracking.dto.user.UserDto;
 import com.epam.spring.time_tracking.dto.user.UserInActivityDto;
 import com.epam.spring.time_tracking.model.Activity;
 import com.epam.spring.time_tracking.model.Category;
+import com.epam.spring.time_tracking.model.User;
 import com.epam.spring.time_tracking.model.UserActivity;
 import com.epam.spring.time_tracking.repository.ActivityRepo;
 import com.epam.spring.time_tracking.repository.CategoryRepo;
 import com.epam.spring.time_tracking.repository.UserActivityRepo;
+import com.epam.spring.time_tracking.repository.UserRepo;
 import com.epam.spring.time_tracking.service.ActivityService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -26,6 +29,7 @@ public class ActivityServiceImpl implements ActivityService {
     private final ActivityRepo activityRepo;
     private final CategoryRepo categoryRepo;
     private final UserActivityRepo userActivityRepo;
+    private final UserRepo userRepo;
     private final ModelMapper modelMapper;
 
     @Override
@@ -60,6 +64,16 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
+    public List<UserDto> getUsersNotInActivity(int activityId) {
+        List<User> activityUsers = userActivityRepo.getActivityUsers(activityId).stream()
+                .map(UserActivity::getUser)
+                .collect(Collectors.toList());
+        return userRepo.getUsersNotInActivity(activityUsers).stream()
+                .map(user -> modelMapper.map(user, UserDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<ActivityForUserDto> getActivitiesForUser(int userId) {
         List<UserActivity> activities = userActivityRepo.getActivitiesForUser(userId);
         return activities.stream()
@@ -90,6 +104,18 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public UserInActivityDto getUserInActivity(int activityId, int userId) {
         UserActivity user = userActivityRepo.getUserInActivity(activityId, userId);
+        return modelMapper.map(user, UserInActivityDto.class);
+    }
+
+    @Override
+    public UserInActivityDto startActivity(int activityId, int userId) {
+        UserActivity user = userActivityRepo.startActivity(activityId, userId);
+        return modelMapper.map(user, UserInActivityDto.class);
+    }
+
+    @Override
+    public UserInActivityDto stopActivity(int activityId, int userId) {
+        UserActivity user = userActivityRepo.stopActivity(activityId, userId);
         return modelMapper.map(user, UserInActivityDto.class);
     }
 
