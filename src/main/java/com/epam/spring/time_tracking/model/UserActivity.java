@@ -1,17 +1,19 @@
 package com.epam.spring.time_tracking.model;
 
+import lombok.Builder;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 @Data
+@Builder
 public class UserActivity {
-    private User user;
     private Activity activity;
-    private Date startTime;
-    private Date stopTime;
+    private User user;
+    private LocalDateTime startTime;
+    private LocalDateTime stopTime;
     private double spentTime;
     private Status status;
 

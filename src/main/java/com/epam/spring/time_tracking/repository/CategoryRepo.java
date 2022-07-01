@@ -10,9 +10,9 @@ public interface CategoryRepo {
 
     List<Category> getCategories();
 
-    Category getCategoryById(int id);
+    Category getCategoryById(int categoryId);
 
-    Category updateCategory(int id, Category category);
+    Category updateCategory(int categoryId, Category category);
 
-    void deleteCategory(int id);
+    void deleteCategory(int categoryId);
 }

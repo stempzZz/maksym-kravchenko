@@ -1,9 +1,11 @@
 package com.epam.spring.time_tracking.repository.impl;
 
 import com.epam.spring.time_tracking.model.Activity;
+import com.epam.spring.time_tracking.model.Category;
 import com.epam.spring.time_tracking.repository.ActivityRepo;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,6 +19,9 @@ public class ActivityRepoImpl implements ActivityRepo {
     @Override
     public Activity createActivity(Activity activity) {
         activity.setId(++idCounter);
+        if (activity.getCategories() == null)
+            activity.setCategories(List.of(Category.builder().nameEN("Other").nameUA("Інше").build()));
+        activity.setCreateTime(LocalDateTime.now());
         activityList.add(activity);
         return activity;
     }
@@ -31,16 +36,16 @@ public class ActivityRepoImpl implements ActivityRepo {
     }
 
     @Override
-    public Activity getActivityById(int id) {
+    public Activity getActivityById(int activityId) {
         return activityList.stream()
-                .filter(activity -> activity.getId() == id)
+                .filter(activity -> activity.getId() == activityId)
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("activity is not found"));
     }
 
     @Override
-    public Activity updateActivity(int id, Activity activity) {
-        Activity updatedActivity = getActivityById(id);
+    public Activity updateActivity(int activityId, Activity activity) {
+        Activity updatedActivity = getActivityById(activityId);
         updatedActivity.setName(activity.getName());
         updatedActivity.setCategories(activity.getCategories());
         updatedActivity.setDescription(activity.getDescription());
@@ -49,7 +54,7 @@ public class ActivityRepoImpl implements ActivityRepo {
     }
 
     @Override
-    public void deleteActivity(int id) {
-        activityList.removeIf(activity -> activity.getId() == id);
+    public void deleteActivity(int activityId) {
+        activityList.removeIf(activity -> activity.getId() == activityId);
     }
 }

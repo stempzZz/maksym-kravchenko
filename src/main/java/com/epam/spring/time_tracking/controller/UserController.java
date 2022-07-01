@@ -15,12 +15,12 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/users/register")
+    @PostMapping("/user/register")
     public UserDto createUser(@RequestBody UserRegisterDto userRegisterDto) {
         return userService.createUser(userRegisterDto);
     }
 
-    @PostMapping("/users/auth")
+    @PostMapping("/user/auth")
     public UserDto authUser(@RequestBody UserLoginDto userLoginDto) {
         return userService.authUser(userLoginDto);
     }

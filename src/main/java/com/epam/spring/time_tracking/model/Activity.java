@@ -2,7 +2,7 @@ package com.epam.spring.time_tracking.model;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +16,7 @@ public class Activity {
     private String image;
     private int peopleCount;
     private int creatorId;
-    private Date createTime;
+    private LocalDateTime createTime;
     private Status status;
 
     public enum Status {

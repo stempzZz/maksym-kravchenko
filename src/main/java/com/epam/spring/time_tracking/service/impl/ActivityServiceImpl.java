@@ -3,10 +3,13 @@ package com.epam.spring.time_tracking.service.impl;
 import com.epam.spring.time_tracking.dto.activity.ActivityDto;
 import com.epam.spring.time_tracking.dto.activity.ActivityInputDto;
 import com.epam.spring.time_tracking.dto.category.CategoryDto;
+import com.epam.spring.time_tracking.dto.user.UserInActivityDto;
 import com.epam.spring.time_tracking.model.Activity;
 import com.epam.spring.time_tracking.model.Category;
+import com.epam.spring.time_tracking.model.UserActivity;
 import com.epam.spring.time_tracking.repository.ActivityRepo;
 import com.epam.spring.time_tracking.repository.CategoryRepo;
+import com.epam.spring.time_tracking.repository.UserActivityRepo;
 import com.epam.spring.time_tracking.service.ActivityService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -21,61 +24,69 @@ public class ActivityServiceImpl implements ActivityService {
 
     private final ActivityRepo activityRepo;
     private final CategoryRepo categoryRepo;
+    private final UserActivityRepo userActivityRepo;
     private final ModelMapper modelMapper;
 
     @Override
     public ActivityDto createActivity(ActivityInputDto activityInputDto) {
-        List<Category> categories = activityInputDto.getCategoryIds().stream()
-                .map(categoryRepo::getCategoryById)
-                .collect(Collectors.toList());
-        Activity activity = modelMapper.map(activityInputDto, Activity.class);
-        activity.setCategories(categories);
-
-        activity = activityRepo.createActivity(activity);
-
-        List<CategoryDto> categoryDtos = activity.getCategories().stream()
-                .map(category -> modelMapper.map(category, CategoryDto.class))
-                .collect(Collectors.toList());
-        ActivityDto activityDto = modelMapper.map(activity, ActivityDto.class);
-        activityDto.setCategories(categoryDtos);
-        return activityDto;
+        Activity activity = activityRepo.createActivity(activityWithSetCategories(activityInputDto));
+        return modelMapper.map(activity, ActivityDto.class);
     }
 
     @Override
     public List<ActivityDto> getActivities() {
         List<Activity> activities = activityRepo.getActivities();
         return activities.stream()
-                .map(activity -> {
-                    List<CategoryDto> categoryDtos = activity.getCategories().stream()
-                            .map(category -> modelMapper.map(category, CategoryDto.class))
-                            .collect(Collectors.toList());
-                    ActivityDto activityDto = modelMapper.map(activity, ActivityDto.class);
-                    activityDto.setCategories(categoryDtos);
-                    return activityDto;
-                })
+                .map(activity -> modelMapper.map(activity, ActivityDto.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public ActivityDto updateActivity(int id, ActivityInputDto activityInputDto) {
-        List<Category> categories = activityInputDto.getCategoryIds().stream()
-                .map(categoryRepo::getCategoryById)
-                .collect(Collectors.toList());
-        Activity activity = modelMapper.map(activityInputDto, Activity.class);
-        activity.setCategories(categories);
+    public ActivityDto getActivity(int activityId) {
+        Activity activity = activityRepo.getActivityById(activityId);
+        return modelMapper.map(activity, ActivityDto.class);
+    }
 
-        activity = activityRepo.updateActivity(id, activity);
-
-        List<CategoryDto> categoryDtos = activity.getCategories().stream()
-                .map(category -> modelMapper.map(category, CategoryDto.class))
-                .collect(Collectors.toList());
-        ActivityDto activityDto = modelMapper.map(activity, ActivityDto.class);
-        activityDto.setCategories(categoryDtos);
-        return activityDto;
+    @Override
+    public ActivityDto updateActivity(int activityId, ActivityInputDto activityInputDto) {
+        Activity activity = activityRepo.updateActivity(activityId, activityWithSetCategories(activityInputDto));
+        return modelMapper.map(activity, ActivityDto.class);
     }
 
     @Override
     public void deleteActivity(int id) {
         activityRepo.deleteActivity(id);
+    }
+
+    @Override
+    public List<UserInActivityDto> getActivityUsers(int activityId) {
+        List<UserActivity> users = userActivityRepo.getActivityUsers(activityId);
+        return users.stream()
+                .map(userActivity -> modelMapper.map(userActivity, UserInActivityDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserInActivityDto addUserToActivity(int activityId, int userId) {
+        UserActivity user = userActivityRepo.addUserToActivity(activityId, userId);
+        return modelMapper.map(user, UserInActivityDto.class);
+    }
+
+    @Override
+    public void removeUserFromActivity(int activityId, int userId) {
+        userActivityRepo.removeUserFromActivity(activityId, userId);
+    }
+
+    private Activity activityWithSetCategories(ActivityInputDto activityInputDto) {
+        Activity activity = modelMapper.map(activityInputDto, Activity.class);
+        if (activityInputDto.getCategoryIds() != null) {
+            List<Category> categories = activityInputDto.getCategoryIds().stream()
+                    .map(categoryRepo::getCategoryById)
+                    .collect(Collectors.toList());
+            activity.setCategories(categories);
+        } else {
+            activity.setCategories(List.of(categoryRepo.getCategoryById(0)));
+        }
+        return activity;
     }
 }

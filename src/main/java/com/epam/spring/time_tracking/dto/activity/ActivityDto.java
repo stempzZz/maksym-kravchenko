@@ -3,7 +3,7 @@ package com.epam.spring.time_tracking.dto.activity;
 import com.epam.spring.time_tracking.dto.category.CategoryDto;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -15,5 +15,5 @@ public class ActivityDto {
     private String image;
     private int peopleCount;
     private int creatorId;
-    private Date createTime;
+    private LocalDateTime createTime;
 }

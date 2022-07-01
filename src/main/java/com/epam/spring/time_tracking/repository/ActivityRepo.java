@@ -1,6 +1,7 @@
 package com.epam.spring.time_tracking.repository;
 
 import com.epam.spring.time_tracking.model.Activity;
+import com.epam.spring.time_tracking.model.UserActivity;
 
 import java.util.List;
 
@@ -9,9 +10,9 @@ public interface ActivityRepo {
 
     List<Activity> getActivities();
 
-    Activity getActivityById(int id);
+    Activity getActivityById(int activityId);
 
-    Activity updateActivity(int id, Activity activity);
+    Activity updateActivity(int activityId, Activity activity);
 
-    void deleteActivity(int id);
+    void deleteActivity(int activityId);
 }

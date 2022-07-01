@@ -24,19 +24,19 @@ public class CategoryController {
         return categoryService.getCategories();
     }
 
-    @GetMapping("/category/{id}")
-    public CategoryDto getCategoryById(@PathVariable int id) {
-        return categoryService.getCategoryById(id);
+    @GetMapping("/category/{categoryId}")
+    public CategoryDto getCategoryById(@PathVariable int categoryId) {
+        return categoryService.getCategoryById(categoryId);
     }
 
-    @PutMapping("/category/{id}")
-    public CategoryDto updateCategory(@PathVariable int id, @RequestBody CategoryDto categoryDto) {
-        return categoryService.updateCategory(id, categoryDto);
+    @PutMapping("/category/{categoryId}")
+    public CategoryDto updateCategory(@PathVariable int categoryId, @RequestBody CategoryDto categoryDto) {
+        return categoryService.updateCategory(categoryId, categoryDto);
     }
 
-    @DeleteMapping("/category/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable int id) {
-        categoryService.deleteCategory(id);
+    @DeleteMapping("/category/{categoryId}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable int categoryId) {
+        categoryService.deleteCategory(categoryId);
         return ResponseEntity.noContent().build();
     }
 }

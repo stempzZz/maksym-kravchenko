@@ -28,9 +28,8 @@ public class UserServiceImpl implements UserService {
     public UserDto authUser(UserLoginDto userLoginDto) {
         User user = modelMapper.map(userLoginDto, User.class);
         user = userRepo.getUserByEmail(user.getEmail());
-        if (userLoginDto.getPassword().equals(user.getPassword())) {
-            return modelMapper.map(user, UserDto.class);
-        }
-        return null;
+        if (!userLoginDto.getPassword().equals(user.getPassword()))
+            throw new RuntimeException("password confirmation isn't success");
+        return modelMapper.map(user, UserDto.class);
     }
 }

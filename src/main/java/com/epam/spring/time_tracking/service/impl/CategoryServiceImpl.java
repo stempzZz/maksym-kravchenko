@@ -33,20 +33,20 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto getCategoryById(int id) {
-        Category category = categoryRepo.getCategoryById(id);
+    public CategoryDto getCategoryById(int categoryId) {
+        Category category = categoryRepo.getCategoryById(categoryId);
         return modelMapper.map(category, CategoryDto.class);
     }
 
     @Override
-    public CategoryDto updateCategory(int id, CategoryDto categoryDto) {
+    public CategoryDto updateCategory(int categoryId, CategoryDto categoryDto) {
         Category category = modelMapper.map(categoryDto, Category.class);
-        category = categoryRepo.updateCategory(id, category);
+        category = categoryRepo.updateCategory(categoryId, category);
         return modelMapper.map(category, CategoryDto.class);
     }
 
     @Override
-    public void deleteCategory(int id) {
-        categoryRepo.deleteCategory(id);
+    public void deleteCategory(int categoryId) {
+        categoryRepo.deleteCategory(categoryId);
     }
 }
