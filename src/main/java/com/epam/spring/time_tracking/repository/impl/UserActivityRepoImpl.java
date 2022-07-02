@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -33,7 +34,9 @@ public class UserActivityRepoImpl implements UserActivityRepo {
 
     @Override
     public UserActivity addUserToActivity(int activityId, int userId) {
+        checkIfUserNotInActivity(activityId, userId);
         Activity activity = activityRepo.getActivityById(activityId);
+        checkIfActivityIsAvailable(activity);
         User user = userRepo.getUserById(userId);
         UserActivity userActivity = UserActivity.builder()
                 .activity(activity)
@@ -48,8 +51,8 @@ public class UserActivityRepoImpl implements UserActivityRepo {
 
     @Override
     public void removeUserFromActivity(int activityId, int userId) {
-        Activity activity = activityRepo.getActivityById(activityId);
         User user = getUserInActivity(activityId, userId).getUser();
+        Activity activity = activityRepo.getActivityById(activityId);
         activity.setPeopleCount(activity.getPeopleCount() - 1);
         user.setActivityCount(user.getActivityCount() - 1);
         userActivityList.removeIf(userActivity -> userActivity.getActivity().getId() == activityId &&
@@ -117,5 +120,27 @@ public class UserActivityRepoImpl implements UserActivityRepo {
                         userActivity.getActivity().getStatus().equals(Activity.Status.BY_USER) ||
                         userActivity.getActivity().getStatus().equals(Activity.Status.DEL_WAITING))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteActivity(int activityId) {
+        userActivityList.removeIf(userActivity -> userActivity.getActivity().getId() == activityId);
+    }
+
+    private void checkIfUserNotInActivity(int activityId, int userId) {
+        Optional<UserActivity> userActivity = userActivityList.stream()
+                .filter(ua -> ua.getActivity().getId() == activityId &&
+                        ua.getUser().getId() == userId)
+                .findFirst();
+        if (userActivity.isPresent())
+            throw new RuntimeException("user is already in activity");
+    }
+
+    private void checkIfActivityIsAvailable(Activity activity) {
+        if (activity.getStatus().equals(Activity.Status.ADD_WAITING) ||
+                activity.getStatus().equals(Activity.Status.ADD_DECLINED) ||
+                activity.getStatus().equals(Activity.Status.DEL_CONFIRMED)) {
+            throw new RuntimeException("activity is not available or removed");
+        }
     }
 }

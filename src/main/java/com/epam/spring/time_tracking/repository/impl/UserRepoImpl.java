@@ -85,6 +85,14 @@ public class UserRepoImpl implements UserRepo {
         userList.removeIf(user -> user.getId() == userId);
     }
 
+    @Override
+    public boolean checkIfUserExists(int userId) {
+        Optional<User> user = userList.stream()
+                .filter(u -> u.getId() == userId)
+                .findFirst();
+        return user.isPresent();
+    }
+
     private boolean checkForUnique(User user) {
         return userList.stream()
                 .noneMatch(u -> u.getEmail().equals(user.getEmail()));

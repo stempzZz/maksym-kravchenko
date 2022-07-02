@@ -16,5 +16,4 @@ public class ActivityInputDto {
     private int peopleCount;
     private int creatorId;
     private LocalDateTime createTime;
-    private Activity.Status status;
 }

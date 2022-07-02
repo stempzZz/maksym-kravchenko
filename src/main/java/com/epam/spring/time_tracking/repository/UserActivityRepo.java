@@ -23,4 +23,6 @@ public interface UserActivityRepo {
     UserActivity stopActivity(int activityId, int userId);
 
     List<UserActivity> getUserActivities(int userId);
+
+    void deleteActivity(int activityId);
 }

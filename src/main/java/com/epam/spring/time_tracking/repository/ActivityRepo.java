@@ -8,6 +8,8 @@ import java.util.List;
 public interface ActivityRepo {
     Activity createActivity(Activity activity);
 
+    Activity createActivityForRequest(Activity activity);
+
     List<Activity> getActivities();
 
     List<Activity> getAdminActivities(int userId);

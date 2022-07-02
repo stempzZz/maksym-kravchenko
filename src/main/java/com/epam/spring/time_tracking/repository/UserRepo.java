@@ -22,4 +22,6 @@ public interface UserRepo {
     User updateUserPassword(int userId, User user);
 
     void deleteUser(int userId);
+
+    boolean checkIfUserExists(int userId);
 }
