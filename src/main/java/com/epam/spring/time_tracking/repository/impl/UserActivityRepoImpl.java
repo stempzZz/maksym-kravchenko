@@ -41,13 +41,30 @@ public class UserActivityRepoImpl implements UserActivityRepo {
                 .status(UserActivity.Status.NOT_STARTED)
                 .build();
         userActivityList.add(userActivity);
+        activity.setPeopleCount(activity.getPeopleCount() + 1);
+        user.setActivityCount(user.getActivityCount() + 1);
         return userActivity;
     }
 
     @Override
     public void removeUserFromActivity(int activityId, int userId) {
+        Activity activity = activityRepo.getActivityById(activityId);
+        User user = getUserInActivity(activityId, userId).getUser();
+        activity.setPeopleCount(activity.getPeopleCount() - 1);
+        user.setActivityCount(user.getActivityCount() - 1);
         userActivityList.removeIf(userActivity -> userActivity.getActivity().getId() == activityId &&
                 userActivity.getUser().getId() == userId);
+    }
+
+    @Override
+    public void removeUserFromActivities(int userId) {
+        List<Activity> activities = userActivityList.stream()
+                .filter(userActivity -> userActivity.getUser().getId() == userId)
+                .map(UserActivity::getActivity)
+                .collect(Collectors.toList());
+        if (!activities.isEmpty())
+            activities.forEach(activity -> activity.setPeopleCount(activity.getPeopleCount() - 1));
+        userActivityList.removeIf(userActivity -> userActivity.getUser().getId() == userId);
     }
 
     @Override
@@ -90,5 +107,15 @@ public class UserActivityRepoImpl implements UserActivityRepo {
         userActivity.getUser().setSpentTime(userActivity.getUser().getSpentTime() + spentTime);
         userActivity.setStatus(UserActivity.Status.STOPPED);
         return userActivity;
+    }
+
+    @Override
+    public List<UserActivity> getUserActivities(int userId) {
+        return userActivityList.stream()
+                .filter(userActivity -> userActivity.getUser().getId() == userId)
+                .filter(userActivity -> userActivity.getActivity().getStatus().equals(Activity.Status.BY_ADMIN) ||
+                        userActivity.getActivity().getStatus().equals(Activity.Status.BY_USER) ||
+                        userActivity.getActivity().getStatus().equals(Activity.Status.DEL_WAITING))
+                .collect(Collectors.toList());
     }
 }

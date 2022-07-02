@@ -40,6 +40,13 @@ public class ActivityRepoImpl implements ActivityRepo {
     }
 
     @Override
+    public List<Activity> getAdminActivities(int userId) {
+        return activityList.stream()
+                .filter(activity -> activity.getCreatorId() == userId)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Activity getActivityById(int activityId) {
         return activityList.stream()
                 .filter(activity -> activity.getId() == activityId)

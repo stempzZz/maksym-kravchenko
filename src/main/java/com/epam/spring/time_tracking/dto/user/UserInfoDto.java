@@ -1,15 +1,14 @@
 package com.epam.spring.time_tracking.dto.user;
 
-import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
-public class UserRegisterDto {
+public class UserInfoDto {
+    private int id;
     private String lastName;
     private String firstName;
-    private String email;
-    private String password;
-    private String repeatPassword;
+    private int activityCount;
+    private double spentTime;
     private boolean isAdmin;
+    private boolean isBlocked;
 }

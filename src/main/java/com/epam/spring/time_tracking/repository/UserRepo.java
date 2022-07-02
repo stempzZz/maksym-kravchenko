@@ -12,4 +12,14 @@ public interface UserRepo {
     User createUser(User user);
 
     List<User> getUsersNotInActivity(List<User> activityUsers);
+
+    List<User> getUsers();
+
+    User blockUser(int userId, boolean isBlocked);
+
+    User updateUserInfo(int userId, User user);
+
+    User updateUserPassword(int userId, User user);
+
+    void deleteUser(int userId);
 }

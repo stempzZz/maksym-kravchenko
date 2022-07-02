@@ -10,6 +10,8 @@ public interface ActivityRepo {
 
     List<Activity> getActivities();
 
+    List<Activity> getAdminActivities(int userId);
+
     Activity getActivityById(int activityId);
 
     Activity updateActivity(int activityId, Activity activity);

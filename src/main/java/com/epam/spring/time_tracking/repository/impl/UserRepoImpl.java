@@ -52,6 +52,39 @@ public class UserRepoImpl implements UserRepo {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<User> getUsers() {
+        return userList;
+    }
+
+    @Override
+    public User blockUser(int userId, boolean isBlocked) {
+        User user = getUserById(userId);
+        user.setBlocked(isBlocked);
+        return user;
+    }
+
+    @Override
+    public User updateUserInfo(int userId, User user) {
+        User updatedUser = getUserById(userId);
+        updatedUser.setLastName(user.getLastName());
+        updatedUser.setFirstName(user.getFirstName());
+        updatedUser.setEmail(user.getEmail());
+        return updatedUser;
+    }
+
+    @Override
+    public User updateUserPassword(int userId, User user) {
+        User updatedUser = getUserById(userId);
+        updatedUser.setPassword(user.getPassword());
+        return updatedUser;
+    }
+
+    @Override
+    public void deleteUser(int userId) {
+        userList.removeIf(user -> user.getId() == userId);
+    }
+
     private boolean checkForUnique(User user) {
         return userList.stream()
                 .noneMatch(u -> u.getEmail().equals(user.getEmail()));
