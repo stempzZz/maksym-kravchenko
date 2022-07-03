@@ -6,19 +6,20 @@ import com.epam.spring.time_tracking.model.Request;
 import java.util.List;
 
 public interface RequestRepo {
-    Request createRequestForAdd(Activity activity);
 
-    Request createRequestForRemove(Activity activity);
+    List<Request> getRequests();
+
+    Request getRequest(int requestId);
+
+    Request createRequestToAdd(Activity activity);
+
+    Request createRequestToRemove(Activity activity);
 
     Request confirmRequest(int requestId);
 
     Request declineRequest(int requestId);
 
-    Request getRequest(int requestId);
-
-    List<Request> getRequests();
+    void deleteRequest(int requestId);
 
     void deleteRequestsWithActivity(int activityId);
-
-    void deleteRequest(int requestId);
 }

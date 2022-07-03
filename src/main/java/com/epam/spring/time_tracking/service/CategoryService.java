@@ -5,11 +5,12 @@ import com.epam.spring.time_tracking.dto.category.CategoryDto;
 import java.util.List;
 
 public interface CategoryService {
-    CategoryDto createCategory(CategoryDto categoryDto);
 
     List<CategoryDto> getCategories();
 
-    CategoryDto getCategoryById(int categoryId);
+    CategoryDto getCategory(int categoryId);
+
+    CategoryDto createCategory(CategoryDto categoryDto);
 
     CategoryDto updateCategory(int categoryId, CategoryDto categoryDto);
 

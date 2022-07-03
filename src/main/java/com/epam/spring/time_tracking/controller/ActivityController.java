@@ -7,80 +7,110 @@ import com.epam.spring.time_tracking.dto.user.UserDto;
 import com.epam.spring.time_tracking.dto.user.UserInActivityDto;
 import com.epam.spring.time_tracking.service.ActivityService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/activity")
 @RequiredArgsConstructor
+@Slf4j
 public class ActivityController {
 
     private final ActivityService activityService;
 
-    @PostMapping("/activity")
-    public ActivityDto createActivity(@RequestBody ActivityInputDto activityInputDto) {
-        return activityService.createActivity(activityInputDto);
-    }
-
-    @GetMapping("/activity")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping
     public List<ActivityDto> getActivities() {
+        log.info("Getting all available activities");
         return activityService.getActivities();
     }
 
-    @GetMapping("/activity/{activityId}")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/{activityId}")
     public ActivityDto getActivity(@PathVariable int activityId) {
+        log.info("Getting activity with id: {}", activityId);
         return activityService.getActivity(activityId);
     }
 
-    @GetMapping("/activity/{activityId}/user/available")
-    public List<UserDto> getUsersNotInActivity(@PathVariable int activityId) {
-        return activityService.getUsersNotInActivity(activityId);
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/user/{userId}")
+    public List<ActivityForUserDto> getActivitiesForUser(@PathVariable int userId) {
+        log.info("Getting activities for regular user with id: {}", userId);
+        return activityService.getActivitiesForUser(userId);
     }
 
-    @GetMapping("/activity/{activityId}/user")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping
+    public ActivityDto createActivity(@RequestBody ActivityInputDto activityInputDto) {
+        log.info("Creating activity: {}", activityInputDto);
+        return activityService.createActivity(activityInputDto);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/{activityId}/user")
     public List<UserInActivityDto> getActivityUsers(@PathVariable int activityId) {
+        log.info("Getting users for activity with id: {}", activityId);
         return activityService.getActivityUsers(activityId);
     }
 
-    @PostMapping("/activity/{activityId}/user/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/{activityId}/user/available")
+    public List<UserDto> getUsersNotInActivity(@PathVariable int activityId) {
+        log.info("Getting users who are not in activity with id: {}", activityId);
+        return activityService.getUsersNotInActivity(activityId);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/{activityId}/user/{userId}")
+    public UserInActivityDto getUserInActivity(@PathVariable int activityId, @PathVariable int userId) {
+        log.info("Getting user's (id={}) information in activity with id: {}", userId, activityId);
+        return activityService.getUserInActivity(activityId, userId);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/{activityId}/user/{userId}")
     public UserInActivityDto addUserToActivity(@PathVariable int activityId, @PathVariable int userId) {
+        log.info("Adding user (id={}) to an activity with id: {}", userId, activityId);
         return activityService.addUserToActivity(activityId, userId);
     }
 
-    @DeleteMapping("/activity/{activityId}/user/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping("/{activityId}/user/{userId}")
     public ResponseEntity<Void> removeUserFromActivity(@PathVariable int activityId, @PathVariable int userId) {
+        log.info("Removing user (id={}) from an activity with id: {}", userId, activityId);
         activityService.removeUserFromActivity(activityId, userId);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/activity/user/{userId}")
-    public List<ActivityForUserDto> getActivitiesForUser(@PathVariable int userId) {
-        return activityService.getActivitiesForUser(userId);
-    }
-
-    @GetMapping("/activity/{activityId}/user/{userId}")
-    public UserInActivityDto getUserInActivity(@PathVariable int activityId, @PathVariable int userId) {
-        return activityService.getUserInActivity(activityId, userId);
-    }
-
-    @PutMapping("/activity/{activityId}/user/{userId}/start")
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/{activityId}/user/{userId}/start")
     public UserInActivityDto startActivity(@PathVariable int activityId, @PathVariable int userId) {
+        log.info("User (id={}) starts activity with id: {}", userId, activityId);
         return activityService.startActivity(activityId, userId);
     }
 
-    @PutMapping("/activity/{activityId}/user/{userId}/stop")
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/{activityId}/user/{userId}/stop")
     public UserInActivityDto stopActivity(@PathVariable int activityId, @PathVariable int userId) {
+        log.info("User (id={}) stops activity with id: {}", userId, activityId);
         return activityService.stopActivity(activityId, userId);
     }
 
-    @PutMapping("/activity/{activityId}")
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/{activityId}")
     public ActivityDto updateActivity(@PathVariable int activityId, @RequestBody ActivityInputDto activityInputDto) {
+        log.info("Updating activity (id={}): {}", activityId, activityInputDto);
         return activityService.updateActivity(activityId, activityInputDto);
     }
 
-    @DeleteMapping("/activity/{activityId}")
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping("/{activityId}")
     public ResponseEntity<Void> deleteActivity(@PathVariable int activityId) {
+        log.info("Deleting activity with id: {}", activityId);
         activityService.deleteActivity(activityId);
         return ResponseEntity.noContent().build();
     }

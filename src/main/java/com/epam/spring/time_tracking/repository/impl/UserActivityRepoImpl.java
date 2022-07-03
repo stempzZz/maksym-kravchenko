@@ -7,18 +7,19 @@ import com.epam.spring.time_tracking.repository.ActivityRepo;
 import com.epam.spring.time_tracking.repository.UserActivityRepo;
 import com.epam.spring.time_tracking.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class UserActivityRepoImpl implements UserActivityRepo {
 
     private final List<UserActivity> userActivityList = new ArrayList<>();
@@ -27,13 +28,36 @@ public class UserActivityRepoImpl implements UserActivityRepo {
 
     @Override
     public List<UserActivity> getActivityUsers(int activityId) {
+        log.info("Getting users in activity with id: {}", activityId);
         return userActivityList.stream()
                 .filter(userActivity -> userActivity.getActivity().getId() == activityId)
                 .collect(Collectors.toList());
     }
 
     @Override
+    public List<UserActivity> getActivitiesForUser(int userId) {
+        log.info("Getting activities for user with id: {}", userId);
+        return userActivityList.stream()
+                .filter(userActivity -> userActivity.getUser().getId() == userId)
+                .filter(userActivity -> userActivity.getActivity().getStatus().equals(Activity.Status.BY_ADMIN) ||
+                        userActivity.getActivity().getStatus().equals(Activity.Status.BY_USER) ||
+                        userActivity.getActivity().getStatus().equals(Activity.Status.DEL_WAITING))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserActivity getUserInActivity(int activityId, int userId) {
+        log.info("Getting user's (id={}) information in activity with id: {}", userId, activityId);
+        return userActivityList.stream()
+                .filter(userActivity -> userActivity.getActivity().getId() == activityId &&
+                        userActivity.getUser().getId() == userId)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("user doesn't exist in activity"));
+    }
+
+    @Override
     public UserActivity addUserToActivity(int activityId, int userId) {
+        log.info("Adding user (id={}) to an activity with id: {}", userId, activityId);
         checkIfUserNotInActivity(activityId, userId);
         Activity activity = activityRepo.getActivityById(activityId);
         checkIfActivityIsAvailable(activity);
@@ -53,6 +77,7 @@ public class UserActivityRepoImpl implements UserActivityRepo {
 
     @Override
     public void removeUserFromActivity(int activityId, int userId) {
+        log.info("Removing user (id={}) from an activity with id: {}", userId, activityId);
         User user = getUserInActivity(activityId, userId).getUser();
         Activity activity = activityRepo.getActivityById(activityId);
         activity.setPeopleCount(activity.getPeopleCount() - 1);
@@ -63,6 +88,7 @@ public class UserActivityRepoImpl implements UserActivityRepo {
 
     @Override
     public void removeUserFromActivities(int userId) {
+        log.info("Removing user (id={}) from activities", userId);
         List<Activity> activities = userActivityList.stream()
                 .filter(userActivity -> userActivity.getUser().getId() == userId)
                 .map(UserActivity::getActivity)
@@ -73,26 +99,8 @@ public class UserActivityRepoImpl implements UserActivityRepo {
     }
 
     @Override
-    public List<UserActivity> getActivitiesForUser(int userId) {
-        return userActivityList.stream()
-                .filter(userActivity -> userActivity.getUser().getId() == userId)
-                .filter(userActivity -> userActivity.getActivity().getStatus().equals(Activity.Status.BY_ADMIN) ||
-                        userActivity.getActivity().getStatus().equals(Activity.Status.BY_USER) ||
-                        userActivity.getActivity().getStatus().equals(Activity.Status.DEL_WAITING))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public UserActivity getUserInActivity(int activityId, int userId) {
-        return userActivityList.stream()
-                .filter(userActivity -> userActivity.getActivity().getId() == activityId &&
-                        userActivity.getUser().getId() == userId)
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("user doesn't exist in activity"));
-    }
-
-    @Override
     public UserActivity startActivity(int activityId, int userId) {
+        log.info("Starting activity (id={}) by user with id: {}", activityId, userId);
         UserActivity userActivity = getUserInActivity(activityId, userId);
         userActivity.setStartTime(LocalDateTime.now());
         userActivity.setStopTime(null);
@@ -102,6 +110,7 @@ public class UserActivityRepoImpl implements UserActivityRepo {
 
     @Override
     public UserActivity stopActivity(int activityId, int userId) {
+        log.info("Stopping activity (id={}) by user with id: {}", activityId, userId);
         UserActivity userActivity = getUserInActivity(activityId, userId);
         userActivity.setStopTime(LocalDateTime.now());
 
@@ -115,17 +124,8 @@ public class UserActivityRepoImpl implements UserActivityRepo {
     }
 
     @Override
-    public List<UserActivity> getUserActivities(int userId) {
-        return userActivityList.stream()
-                .filter(userActivity -> userActivity.getUser().getId() == userId)
-                .filter(userActivity -> userActivity.getActivity().getStatus().equals(Activity.Status.BY_ADMIN) ||
-                        userActivity.getActivity().getStatus().equals(Activity.Status.BY_USER) ||
-                        userActivity.getActivity().getStatus().equals(Activity.Status.DEL_WAITING))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public void deleteActivity(int activityId) {
+        log.info("Deleting activity with id: {}", activityId);
         userActivityList.stream()
                 .filter(userActivity -> userActivity.getActivity().getId() == activityId)
                 .forEach(userActivity -> {
@@ -136,6 +136,7 @@ public class UserActivityRepoImpl implements UserActivityRepo {
     }
 
     private void checkIfUserNotInActivity(int activityId, int userId) {
+        log.info("Checking if user (id={}) not in activity with id: {}", userId, activityId);
         Optional<UserActivity> userActivity = userActivityList.stream()
                 .filter(ua -> ua.getActivity().getId() == activityId &&
                         ua.getUser().getId() == userId)
@@ -145,6 +146,7 @@ public class UserActivityRepoImpl implements UserActivityRepo {
     }
 
     private void checkIfActivityIsAvailable(Activity activity) {
+        log.info("Checking if activity is available: {}", activity);
         if (activity.getStatus().equals(Activity.Status.ADD_WAITING) ||
                 activity.getStatus().equals(Activity.Status.ADD_DECLINED) ||
                 activity.getStatus().equals(Activity.Status.DEL_CONFIRMED)) {

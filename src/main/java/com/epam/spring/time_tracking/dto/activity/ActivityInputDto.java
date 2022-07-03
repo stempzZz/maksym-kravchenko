@@ -1,6 +1,5 @@
 package com.epam.spring.time_tracking.dto.activity;
 
-import com.epam.spring.time_tracking.model.Activity;
 import lombok.Data;
 
 import java.time.LocalDateTime;

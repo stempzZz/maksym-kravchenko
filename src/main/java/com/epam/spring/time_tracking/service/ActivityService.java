@@ -9,29 +9,30 @@ import com.epam.spring.time_tracking.dto.user.UserInActivityDto;
 import java.util.List;
 
 public interface ActivityService {
-    ActivityDto createActivity(ActivityInputDto activityInputDto);
 
     List<ActivityDto> getActivities();
 
     ActivityDto getActivity(int activityId);
 
-    ActivityDto updateActivity(int activityId, ActivityInputDto activityInputDto);
+    List<ActivityForUserDto> getActivitiesForUser(int userId);
 
-    void deleteActivity(int activityId);
+    ActivityDto createActivity(ActivityInputDto activityInputDto);
+
+    List<UserInActivityDto> getActivityUsers(int activityId);
 
     List<UserDto> getUsersNotInActivity(int activityId);
 
-    List<ActivityForUserDto> getActivitiesForUser(int userId);
-
-    List<UserInActivityDto> getActivityUsers(int activityId);
+    UserInActivityDto getUserInActivity(int activityId, int userId);
 
     UserInActivityDto addUserToActivity(int activityId, int userId);
 
     void removeUserFromActivity(int activityId, int userId);
 
-    UserInActivityDto getUserInActivity(int activityId, int userId);
-
     UserInActivityDto startActivity(int activityId, int userId);
 
     UserInActivityDto stopActivity(int activityId, int userId);
+
+    ActivityDto updateActivity(int activityId, ActivityInputDto activityInputDto);
+
+    void deleteActivity(int activityId);
 }

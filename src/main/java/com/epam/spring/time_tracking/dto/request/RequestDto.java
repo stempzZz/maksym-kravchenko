@@ -1,6 +1,5 @@
 package com.epam.spring.time_tracking.dto.request;
 
-import com.epam.spring.time_tracking.dto.activity.ActivityDto;
 import com.epam.spring.time_tracking.dto.activity.ActivityInRequestDto;
 import com.epam.spring.time_tracking.dto.user.UserInRequestDto;
 import com.epam.spring.time_tracking.model.Request;
