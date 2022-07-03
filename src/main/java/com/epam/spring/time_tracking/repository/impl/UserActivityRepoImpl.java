@@ -38,6 +38,8 @@ public class UserActivityRepoImpl implements UserActivityRepo {
         Activity activity = activityRepo.getActivityById(activityId);
         checkIfActivityIsAvailable(activity);
         User user = userRepo.getUserById(userId);
+        if (user.isAdmin())
+            throw new RuntimeException("admin can't be in activity");
         UserActivity userActivity = UserActivity.builder()
                 .activity(activity)
                 .user(user)
@@ -124,6 +126,12 @@ public class UserActivityRepoImpl implements UserActivityRepo {
 
     @Override
     public void deleteActivity(int activityId) {
+        userActivityList.stream()
+                .filter(userActivity -> userActivity.getActivity().getId() == activityId)
+                .forEach(userActivity -> {
+                    User user = userActivity.getUser();
+                    user.setActivityCount(user.getActivityCount() - 1);
+                });
         userActivityList.removeIf(userActivity -> userActivity.getActivity().getId() == activityId);
     }
 

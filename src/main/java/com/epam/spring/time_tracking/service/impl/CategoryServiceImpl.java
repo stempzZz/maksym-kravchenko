@@ -2,6 +2,7 @@ package com.epam.spring.time_tracking.service.impl;
 
 import com.epam.spring.time_tracking.dto.category.CategoryDto;
 import com.epam.spring.time_tracking.model.Category;
+import com.epam.spring.time_tracking.repository.ActivityRepo;
 import com.epam.spring.time_tracking.repository.CategoryRepo;
 import com.epam.spring.time_tracking.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepo categoryRepo;
+    private final ActivityRepo activityRepo;
     private final ModelMapper modelMapper;
 
     @Override
@@ -47,6 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategory(int categoryId) {
+        activityRepo.deleteCategoryInActivities(categoryRepo.getCategoryById(categoryId));
         categoryRepo.deleteCategory(categoryId);
     }
 }

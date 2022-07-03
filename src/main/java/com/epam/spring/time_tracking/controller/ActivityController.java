@@ -64,12 +64,12 @@ public class ActivityController {
         return activityService.getUserInActivity(activityId, userId);
     }
 
-    @PostMapping("/activity/{activityId}/user/{userId}/start")
+    @PutMapping("/activity/{activityId}/user/{userId}/start")
     public UserInActivityDto startActivity(@PathVariable int activityId, @PathVariable int userId) {
         return activityService.startActivity(activityId, userId);
     }
 
-    @PostMapping("/activity/{activityId}/user/{userId}/stop")
+    @PutMapping("/activity/{activityId}/user/{userId}/stop")
     public UserInActivityDto stopActivity(@PathVariable int activityId, @PathVariable int userId) {
         return activityService.stopActivity(activityId, userId);
     }

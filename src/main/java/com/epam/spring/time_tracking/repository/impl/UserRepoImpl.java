@@ -93,6 +93,11 @@ public class UserRepoImpl implements UserRepo {
         return user.isPresent();
     }
 
+    @Override
+    public boolean checkIfUserIsAdmin(int userId) {
+        return getUserById(userId).isAdmin();
+    }
+
     private boolean checkForUnique(User user) {
         return userList.stream()
                 .noneMatch(u -> u.getEmail().equals(user.getEmail()));

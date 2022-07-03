@@ -31,7 +31,7 @@ public class UserController {
         return userService.getUsers();
     }
 
-    @PostMapping("/user/{userId}/block/{isBlocked}")
+    @PutMapping("/user/{userId}/block/{isBlocked}")
     public UserDto blockUser(@PathVariable int userId, @PathVariable boolean isBlocked) {
         return userService.blockUser(userId, isBlocked);
     }

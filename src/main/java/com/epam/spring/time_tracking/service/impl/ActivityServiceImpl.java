@@ -10,10 +10,7 @@ import com.epam.spring.time_tracking.model.Activity;
 import com.epam.spring.time_tracking.model.Category;
 import com.epam.spring.time_tracking.model.User;
 import com.epam.spring.time_tracking.model.UserActivity;
-import com.epam.spring.time_tracking.repository.ActivityRepo;
-import com.epam.spring.time_tracking.repository.CategoryRepo;
-import com.epam.spring.time_tracking.repository.UserActivityRepo;
-import com.epam.spring.time_tracking.repository.UserRepo;
+import com.epam.spring.time_tracking.repository.*;
 import com.epam.spring.time_tracking.service.ActivityService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -30,11 +27,12 @@ public class ActivityServiceImpl implements ActivityService {
     private final CategoryRepo categoryRepo;
     private final UserActivityRepo userActivityRepo;
     private final UserRepo userRepo;
+    private final RequestRepo requestRepo;
     private final ModelMapper modelMapper;
 
     @Override
     public ActivityDto createActivity(ActivityInputDto activityInputDto) {
-        Activity activity = activityRepo.createActivity(activityWithSetCategories(activityInputDto));
+        Activity activity = activityRepo.createActivity(activityWithSetCategories(activityInputDto), false);
         return modelMapper.map(activity, ActivityDto.class);
     }
 
@@ -60,6 +58,8 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public void deleteActivity(int id) {
+        userActivityRepo.deleteActivity(id);
+        requestRepo.deleteRequestsWithActivity(id);
         activityRepo.deleteActivity(id);
     }
 

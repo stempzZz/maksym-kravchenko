@@ -2,13 +2,16 @@ package com.epam.spring.time_tracking.repository.impl;
 
 import com.epam.spring.time_tracking.lang.Language;
 import com.epam.spring.time_tracking.model.Category;
+import com.epam.spring.time_tracking.repository.ActivityRepo;
 import com.epam.spring.time_tracking.repository.CategoryRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class CategoryRepoImpl implements CategoryRepo {
 
     private final List<Category> categoryList = new ArrayList<>();

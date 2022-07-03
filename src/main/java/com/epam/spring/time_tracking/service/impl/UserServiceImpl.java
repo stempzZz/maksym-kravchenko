@@ -68,7 +68,13 @@ public class UserServiceImpl implements UserService {
     public List<ActivityForUserProfileDto> getUserActivitiesForProfile(int userId) {
         List<UserActivity> userActivityList = userActivityRepo.getUserActivities(userId);
         return userActivityList.stream()
-                .map(activity -> modelMapper.map(activity, ActivityForUserProfileDto.class))
+                .map(userActivity -> {
+                    Activity activity = userActivity.getActivity();
+                    ActivityForUserProfileDto activityDto = modelMapper.map(activity, ActivityForUserProfileDto.class);
+                    activityDto.setSpentTime(userActivity.getSpentTime());
+                    activityDto.setStatus(userActivity.getStatus());
+                    return activityDto;
+                })
                 .collect(Collectors.toList());
     }
 
