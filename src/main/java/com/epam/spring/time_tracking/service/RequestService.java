@@ -1,6 +1,6 @@
 package com.epam.spring.time_tracking.service;
 
-import com.epam.spring.time_tracking.dto.activity.ActivityInputDto;
+import com.epam.spring.time_tracking.dto.activity.ActivityDto;
 import com.epam.spring.time_tracking.dto.request.RequestDto;
 
 import java.util.List;
@@ -11,7 +11,7 @@ public interface RequestService {
 
     RequestDto getRequest(int requestId);
 
-    RequestDto createRequestToAdd(ActivityInputDto activityInputDto);
+    RequestDto createRequestToAdd(ActivityDto activityDto);
 
     RequestDto createRequestToRemove(int activityId);
 

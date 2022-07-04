@@ -4,8 +4,6 @@ import com.epam.spring.time_tracking.dto.activity.ActivityForAdminProfileDto;
 import com.epam.spring.time_tracking.dto.activity.ActivityForUserProfileDto;
 import com.epam.spring.time_tracking.dto.user.UserDto;
 import com.epam.spring.time_tracking.dto.user.UserInfoDto;
-import com.epam.spring.time_tracking.dto.user.UserInputDto;
-import com.epam.spring.time_tracking.dto.user.UserLoginDto;
 
 import java.util.List;
 
@@ -15,9 +13,9 @@ public interface UserService {
 
     UserDto getUser(int userId);
 
-    UserDto createUser(UserInputDto userInputDto);
+    UserDto createUser(UserDto userDto);
 
-    UserDto authUser(UserLoginDto userLoginDto);
+    UserDto authUser(UserDto userDto);
 
     List<ActivityForUserProfileDto> getUserActivitiesForProfile(int userId);
 
@@ -25,9 +23,9 @@ public interface UserService {
 
     UserDto blockUser(int userId, boolean isBlocked);
 
-    UserDto updateUserInfo(int userId, UserInputDto userInputDto);
+    UserDto updateUserInfo(int userId, UserDto userDto);
 
-    UserDto updateUserPassword(int userId, UserInputDto userInputDto);
+    UserDto updateUserPassword(int userId, UserDto userDto);
 
     void deleteUser(int userId);
 }

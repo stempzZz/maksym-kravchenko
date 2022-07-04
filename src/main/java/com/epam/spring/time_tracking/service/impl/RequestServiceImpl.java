@@ -1,7 +1,7 @@
 package com.epam.spring.time_tracking.service.impl;
 
+import com.epam.spring.time_tracking.dto.activity.ActivityDto;
 import com.epam.spring.time_tracking.dto.activity.ActivityInRequestDto;
-import com.epam.spring.time_tracking.dto.activity.ActivityInputDto;
 import com.epam.spring.time_tracking.dto.request.RequestDto;
 import com.epam.spring.time_tracking.dto.user.UserInRequestDto;
 import com.epam.spring.time_tracking.model.Activity;
@@ -46,13 +46,16 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public RequestDto createRequestToAdd(ActivityInputDto activityInputDto) {
-        log.info("Creating request to add an activity: {}", activityInputDto);
-        if (userRepo.checkIfUserIsAdmin(activityInputDto.getCreatorId()))
+    public RequestDto createRequestToAdd(ActivityDto activityDto) {
+        log.info("Creating request to add an activity: {}", activityDto);
+
+        if (userRepo.checkIfUserIsAdmin(activityDto.getCreatorId()))
             throw new RuntimeException("creator with given id is not a regular user");
-        Activity activity = modelMapper.map(activityInputDto, Activity.class);
-        Request request = requestRepo.createRequestToAdd(activity);
+
+        Activity activity = modelMapper.map(activityDto, Activity.class);
         User creator = userRepo.getUserById(activity.getCreatorId());
+
+        Request request = requestRepo.createRequestToAdd(activity);
         RequestDto requestDto = modelMapper.map(request, RequestDto.class);
         requestDto.setActivity(modelMapper.map(activity, ActivityInRequestDto.class));
         requestDto.setUser(modelMapper.map(creator, UserInRequestDto.class));
@@ -62,13 +65,15 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public RequestDto createRequestToRemove(int activityId) {
         log.info("Creating request to remove an activity with id: {}", activityId);
+
         Activity activity = activityRepo.getActivityById(activityId);
         if (activity == null)
             throw new RuntimeException("activity is not found");
-        if (!activity.getStatus().equals(Activity.Status.BY_USER))
+        if (userRepo.checkIfUserIsAdmin(activity.getCreatorId()))
             throw new RuntimeException("activity wasn't created by regular user");
-        Request request = requestRepo.createRequestToRemove(activity);
         User creator = userRepo.getUserById(activity.getCreatorId());
+
+        Request request = requestRepo.createRequestToRemove(activity);
         RequestDto requestDto = modelMapper.map(request, RequestDto.class);
         requestDto.setActivity(modelMapper.map(activity, ActivityInRequestDto.class));
         requestDto.setUser(modelMapper.map(creator, UserInRequestDto.class));

@@ -1,8 +1,6 @@
 package com.epam.spring.time_tracking.service.impl;
 
 import com.epam.spring.time_tracking.dto.activity.ActivityDto;
-import com.epam.spring.time_tracking.dto.activity.ActivityForUserDto;
-import com.epam.spring.time_tracking.dto.activity.ActivityInputDto;
 import com.epam.spring.time_tracking.dto.user.UserDto;
 import com.epam.spring.time_tracking.dto.user.UserInActivityDto;
 import com.epam.spring.time_tracking.model.Activity;
@@ -48,19 +46,23 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public List<ActivityForUserDto> getActivitiesForUser(int userId) {
+    public List<ActivityDto> getActivitiesForUser(int userId) {
         log.info("Getting activities for user with id: {}", userId);
         List<UserActivity> activities = userActivityRepo.getActivitiesForUser(userId);
         return activities.stream()
                 .map(UserActivity::getActivity)
-                .map(activity -> modelMapper.map(activity, ActivityForUserDto.class))
+                .map(activity -> modelMapper.map(activity, ActivityDto.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public ActivityDto createActivity(ActivityInputDto activityInputDto) {
-        log.info("Creating activity: {}", activityInputDto);
-        Activity activity = activityRepo.createActivity(activityWithSetCategories(activityInputDto), false);
+    public ActivityDto createActivity(ActivityDto activityDto) {
+        log.info("Creating activity: {}", activityDto);
+
+        if (!userRepo.getUserById(activityDto.getCreatorId()).isAdmin())
+            throw new RuntimeException("creator must be an admin for creating an activity instantly");
+
+        Activity activity = activityRepo.createActivity(activityWithSetCategories(activityDto));
         return modelMapper.map(activity, ActivityDto.class);
     }
 
@@ -119,9 +121,9 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public ActivityDto updateActivity(int activityId, ActivityInputDto activityInputDto) {
-        log.info("Updating activity (id={}): {}", activityId, activityInputDto);
-        Activity activity = activityRepo.updateActivity(activityId, activityWithSetCategories(activityInputDto));
+    public ActivityDto updateActivity(int activityId, ActivityDto activityDto) {
+        log.info("Updating activity (id={}): {}", activityId, activityDto);
+        Activity activity = activityRepo.updateActivity(activityId, activityWithSetCategories(activityDto));
         return modelMapper.map(activity, ActivityDto.class);
     }
 
@@ -133,11 +135,11 @@ public class ActivityServiceImpl implements ActivityService {
         activityRepo.deleteActivity(id);
     }
 
-    private Activity activityWithSetCategories(ActivityInputDto activityInputDto) {
-        log.info("Setting categories for activity: {}", activityInputDto);
-        Activity activity = modelMapper.map(activityInputDto, Activity.class);
-        if (activityInputDto.getCategoryIds() != null) {
-            List<Category> categories = activityInputDto.getCategoryIds().stream()
+    private Activity activityWithSetCategories(ActivityDto activityDto) {
+        log.info("Setting categories for activity: {}", activityDto);
+        Activity activity = modelMapper.map(activityDto, Activity.class);
+        if (activityDto.getCategoryIds() != null) {
+            List<Category> categories = activityDto.getCategoryIds().stream()
                     .map(categoryRepo::getCategory)
                     .collect(Collectors.toList());
             activity.setCategories(categories);

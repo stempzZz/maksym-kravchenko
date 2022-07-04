@@ -12,19 +12,19 @@ public interface UserRepo {
 
     User getUserByEmail(String email);
 
-    User getUserById(int userId);
+    User getUserById(long userId);
 
     User createUser(User user);
 
-    User blockUser(int userId, boolean isBlocked);
+    User blockUser(long userId, boolean isBlocked);
 
-    User updateUserInfo(int userId, User user);
+    User updateUserInfo(long userId, User user);
 
-    User updateUserPassword(int userId, User user);
+    User updateUserPassword(long userId, User user);
 
-    void deleteUser(int userId);
+    void deleteUser(long userId);
 
-    boolean checkIfUserExists(int userId);
+    boolean checkIfUserExists(long userId);
 
-    boolean checkIfUserIsAdmin(int userId);
+    boolean checkIfUserIsAdmin(long userId);
 }

@@ -2,6 +2,7 @@ package com.epam.spring.time_tracking.repository.impl;
 
 import com.epam.spring.time_tracking.model.Activity;
 import com.epam.spring.time_tracking.model.Category;
+import com.epam.spring.time_tracking.model.User;
 import com.epam.spring.time_tracking.repository.ActivityRepo;
 import com.epam.spring.time_tracking.repository.CategoryRepo;
 import com.epam.spring.time_tracking.repository.UserRepo;
@@ -44,18 +45,19 @@ public class ActivityRepoImpl implements ActivityRepo {
     }
 
     @Override
-    public Activity createActivity(Activity activity, boolean isForRequest) {
+    public Activity createActivity(Activity activity) {
         log.info("Creating activity: {}", activity);
-        log.info("Creating activity for request: {}", isForRequest);
-        checkIfUserExists(activity.getCreatorId(), "creator is not found");
+
+        if (userRepo.checkIfUserIsAdmin(activity.getCreatorId()))
+            activity.setStatus(Activity.Status.BY_ADMIN);
+        else
+            activity.setStatus(Activity.Status.ADD_WAITING);
+
         activity.setId(++idCounter);
         if (activity.getCategories() == null || activity.getCategories().isEmpty())
             activity.setCategories(List.of(categoryRepo.getCategory(0)));
         activity.setCreateTime(LocalDateTime.now());
-        if (isForRequest)
-            activity.setStatus(Activity.Status.ADD_WAITING);
-        else
-            activity.setStatus(Activity.Status.BY_ADMIN);
+
         activityList.add(activity);
         return activity;
     }
