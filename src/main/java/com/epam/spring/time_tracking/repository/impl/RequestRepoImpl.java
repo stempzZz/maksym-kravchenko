@@ -44,7 +44,7 @@ public class RequestRepoImpl implements RequestRepo {
     @Override
     public Request createRequestToAdd(Activity activity) {
         log.info("Creating request to add an activity: {}", activity);
-        Activity activityForAdd = activityRepo.createActivity(activity, true);
+        Activity activityForAdd = activityRepo.createActivity(activity);
         Request request = Request.builder()
                 .id(++idCounter)
                 .activityId(activityForAdd.getId())

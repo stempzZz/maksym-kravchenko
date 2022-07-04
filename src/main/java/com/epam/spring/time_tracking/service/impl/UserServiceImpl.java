@@ -4,8 +4,6 @@ import com.epam.spring.time_tracking.dto.activity.ActivityForAdminProfileDto;
 import com.epam.spring.time_tracking.dto.activity.ActivityForUserProfileDto;
 import com.epam.spring.time_tracking.dto.user.UserDto;
 import com.epam.spring.time_tracking.dto.user.UserInfoDto;
-import com.epam.spring.time_tracking.dto.user.UserInputDto;
-import com.epam.spring.time_tracking.dto.user.UserLoginDto;
 import com.epam.spring.time_tracking.model.Activity;
 import com.epam.spring.time_tracking.model.User;
 import com.epam.spring.time_tracking.model.UserActivity;
@@ -48,21 +46,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto createUser(UserInputDto userInputDto) {
-        log.info("Creating user: {}", userInputDto);
-        if (!userInputDto.getPassword().equals(userInputDto.getRepeatPassword()))
+    public UserDto createUser(UserDto userDto) {
+        log.info("Creating user: {}", userDto);
+        if (!userDto.getPassword().equals(userDto.getRepeatPassword()))
             throw new RuntimeException("password confirmation isn't success");
-        User user = modelMapper.map(userInputDto, User.class);
+        User user = modelMapper.map(userDto, User.class);
         user = userRepo.createUser(user);
         return modelMapper.map(user, UserDto.class);
     }
 
     @Override
-    public UserDto authUser(UserLoginDto userLoginDto) {
-        log.info("Authorizing user: {}", userLoginDto);
-        User user = modelMapper.map(userLoginDto, User.class);
+    public UserDto authUser(UserDto userDto) {
+        log.info("Authorizing user: {}", userDto);
+        User user = modelMapper.map(userDto, User.class);
         user = userRepo.getUserByEmail(user.getEmail());
-        if (!userLoginDto.getPassword().equals(user.getPassword()))
+        if (!userDto.getPassword().equals(user.getPassword()))
             throw new RuntimeException("wrong password was entered");
         return modelMapper.map(user, UserDto.class);
     }
@@ -99,22 +97,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUserInfo(int userId, UserInputDto userInputDto) {
-        log.info("Updating user's (id={}) information: {}", userId, userInputDto);
-        User user = modelMapper.map(userInputDto, User.class);
+    public UserDto updateUserInfo(int userId, UserDto userDto) {
+        log.info("Updating user's (id={}) information: {}", userId, userDto);
+        User user = modelMapper.map(userDto, User.class);
         user = userRepo.updateUserInfo(userId, user);
         return modelMapper.map(user, UserDto.class);
     }
 
     @Override
-    public UserDto updateUserPassword(int userId, UserInputDto userInputDto) {
-        log.info("Updating user's (id={}) password: {}", userId, userInputDto);
+    public UserDto updateUserPassword(int userId, UserDto userDto) {
+        log.info("Updating user's (id={}) password: {}", userId, userDto);
         User user = userRepo.getUserById(userId);
-        if (!userInputDto.getCurrentPassword().equals(user.getPassword()))
+        if (!userDto.getCurrentPassword().equals(user.getPassword()))
             throw new RuntimeException("wrong current password was entered");
-        if (!userInputDto.getPassword().equals(userInputDto.getRepeatPassword()))
+        if (!userDto.getPassword().equals(userDto.getRepeatPassword()))
             throw new RuntimeException("password confirmation isn't success");
-        User updatedUser = modelMapper.map(userInputDto, User.class);
+        User updatedUser = modelMapper.map(userDto, User.class);
         user = userRepo.updateUserPassword(userId, updatedUser);
         return modelMapper.map(user, UserDto.class);
     }

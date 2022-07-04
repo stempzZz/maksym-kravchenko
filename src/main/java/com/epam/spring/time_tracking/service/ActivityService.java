@@ -1,8 +1,6 @@
 package com.epam.spring.time_tracking.service;
 
 import com.epam.spring.time_tracking.dto.activity.ActivityDto;
-import com.epam.spring.time_tracking.dto.activity.ActivityForUserDto;
-import com.epam.spring.time_tracking.dto.activity.ActivityInputDto;
 import com.epam.spring.time_tracking.dto.user.UserDto;
 import com.epam.spring.time_tracking.dto.user.UserInActivityDto;
 
@@ -14,9 +12,9 @@ public interface ActivityService {
 
     ActivityDto getActivity(int activityId);
 
-    List<ActivityForUserDto> getActivitiesForUser(int userId);
+    List<ActivityDto> getActivitiesForUser(int userId);
 
-    ActivityDto createActivity(ActivityInputDto activityInputDto);
+    ActivityDto createActivity(ActivityDto activityDto);
 
     List<UserInActivityDto> getActivityUsers(int activityId);
 
@@ -32,7 +30,7 @@ public interface ActivityService {
 
     UserInActivityDto stopActivity(int activityId, int userId);
 
-    ActivityDto updateActivity(int activityId, ActivityInputDto activityInputDto);
+    ActivityDto updateActivity(int activityId, ActivityDto activityDto);
 
     void deleteActivity(int activityId);
 }

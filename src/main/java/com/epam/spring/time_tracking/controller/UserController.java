@@ -2,15 +2,18 @@ package com.epam.spring.time_tracking.controller;
 
 import com.epam.spring.time_tracking.dto.activity.ActivityForAdminProfileDto;
 import com.epam.spring.time_tracking.dto.activity.ActivityForUserProfileDto;
+import com.epam.spring.time_tracking.dto.group.OnAuthorization;
+import com.epam.spring.time_tracking.dto.group.OnCreate;
+import com.epam.spring.time_tracking.dto.group.OnUpdate;
+import com.epam.spring.time_tracking.dto.group.OnUpdatePassword;
 import com.epam.spring.time_tracking.dto.user.UserDto;
 import com.epam.spring.time_tracking.dto.user.UserInfoDto;
-import com.epam.spring.time_tracking.dto.user.UserInputDto;
-import com.epam.spring.time_tracking.dto.user.UserLoginDto;
 import com.epam.spring.time_tracking.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,16 +42,16 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
-    public UserDto createUser(@RequestBody UserInputDto userInputDto) {
-        log.info("Registering user: {}", userInputDto);
-        return userService.createUser(userInputDto);
+    public UserDto createUser(@RequestBody @Validated(OnCreate.class) UserDto userDto) {
+        log.info("Registering user: {}", userDto);
+        return userService.createUser(userDto);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/auth")
-    public UserDto authUser(@RequestBody UserLoginDto userLoginDto) {
-        log.info("Authorizing user: {}", userLoginDto);
-        return userService.authUser(userLoginDto);
+    public UserDto authUser(@RequestBody @Validated(OnAuthorization.class) UserDto userDto) {
+        log.info("Authorizing user: {}", userDto);
+        return userService.authUser(userDto);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -74,16 +77,16 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{userId}/info")
-    public UserDto updateUserInfo(@PathVariable int userId, @RequestBody UserInputDto userInputDto) {
-        log.info("Updating user's (id={}) information: {}", userId, userInputDto);
-        return userService.updateUserInfo(userId, userInputDto);
+    public UserDto updateUserInfo(@PathVariable int userId, @RequestBody @Validated(OnUpdate.class) UserDto userDto) {
+        log.info("Updating user's (id={}) information: {}", userId, userDto);
+        return userService.updateUserInfo(userId, userDto);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{userId}/password")
-    public UserDto updateUserPassword(@PathVariable int userId, @RequestBody UserInputDto userInputDto) {
-        log.info("Updating user's (id={}) password: {}", userId, userInputDto);
-        return userService.updateUserPassword(userId, userInputDto);
+    public UserDto updateUserPassword(@PathVariable int userId, @RequestBody @Validated(OnUpdatePassword.class) UserDto userDto) {
+        log.info("Updating user's (id={}) password: {}", userId, userDto);
+        return userService.updateUserPassword(userId, userDto);
     }
 
     @ResponseStatus(HttpStatus.OK)

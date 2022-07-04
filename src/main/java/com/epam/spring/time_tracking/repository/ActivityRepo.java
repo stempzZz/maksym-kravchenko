@@ -11,7 +11,7 @@ public interface ActivityRepo {
 
     Activity getActivityById(int activityId);
 
-    Activity createActivity(Activity activity, boolean isForRequest);
+    Activity createActivity(Activity activity);
 
     List<Activity> getAdminActivities(int userId);
 

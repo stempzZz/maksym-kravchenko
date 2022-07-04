@@ -1,8 +1,8 @@
 package com.epam.spring.time_tracking.controller;
 
 import com.epam.spring.time_tracking.dto.activity.ActivityDto;
-import com.epam.spring.time_tracking.dto.activity.ActivityForUserDto;
-import com.epam.spring.time_tracking.dto.activity.ActivityInputDto;
+import com.epam.spring.time_tracking.dto.group.OnCreate;
+import com.epam.spring.time_tracking.dto.group.OnUpdate;
 import com.epam.spring.time_tracking.dto.user.UserDto;
 import com.epam.spring.time_tracking.dto.user.UserInActivityDto;
 import com.epam.spring.time_tracking.service.ActivityService;
@@ -10,8 +10,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -38,16 +40,16 @@ public class ActivityController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/user/{userId}")
-    public List<ActivityForUserDto> getActivitiesForUser(@PathVariable int userId) {
+    public List<ActivityDto> getActivitiesForUser(@PathVariable int userId) {
         log.info("Getting activities for regular user with id: {}", userId);
         return activityService.getActivitiesForUser(userId);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ActivityDto createActivity(@RequestBody ActivityInputDto activityInputDto) {
-        log.info("Creating activity: {}", activityInputDto);
-        return activityService.createActivity(activityInputDto);
+    public ActivityDto createActivity(@RequestBody @Valid ActivityDto activityDto) {
+        log.info("Creating activity: {}", activityDto);
+        return activityService.createActivity(activityDto);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -102,9 +104,9 @@ public class ActivityController {
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{activityId}")
-    public ActivityDto updateActivity(@PathVariable int activityId, @RequestBody ActivityInputDto activityInputDto) {
-        log.info("Updating activity (id={}): {}", activityId, activityInputDto);
-        return activityService.updateActivity(activityId, activityInputDto);
+    public ActivityDto updateActivity(@PathVariable int activityId, @RequestBody @Valid ActivityDto activityDto) {
+        log.info("Updating activity (id={}): {}", activityId, activityDto);
+        return activityService.updateActivity(activityId, activityDto);
     }
 
     @ResponseStatus(HttpStatus.OK)

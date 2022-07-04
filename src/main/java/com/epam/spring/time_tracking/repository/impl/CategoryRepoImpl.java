@@ -52,11 +52,11 @@ public class CategoryRepoImpl implements CategoryRepo {
     @Override
     public Category updateCategory(int categoryId, Category category) {
         log.info("Updating category (id={}): {}", categoryId, category);
-        if (!checkForUnique(category, Language.EN))
-            throw new RuntimeException("category name (EN) already exists");
-        if (!checkForUnique(category, Language.UA))
-            throw new RuntimeException("category name (UA) already exists");
         Category updatedCategory = getCategory(categoryId);
+        if (!category.getNameEN().equals(updatedCategory.getNameEN()) && !checkForUnique(category, Language.EN))
+            throw new RuntimeException("category name (EN) already exists");
+        if (!category.getNameUA().equals(updatedCategory.getNameUA()) && !checkForUnique(category, Language.UA))
+            throw new RuntimeException("category name (UA) already exists");
         updatedCategory.setNameEN(category.getNameEN());
         updatedCategory.setNameUA(category.getNameUA());
         return updatedCategory;

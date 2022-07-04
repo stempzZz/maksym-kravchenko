@@ -1,13 +1,17 @@
 package com.epam.spring.time_tracking.controller;
 
 import com.epam.spring.time_tracking.dto.category.CategoryDto;
+import com.epam.spring.time_tracking.dto.group.OnCreate;
+import com.epam.spring.time_tracking.dto.group.OnUpdate;
 import com.epam.spring.time_tracking.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -34,14 +38,14 @@ public class CategoryController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public CategoryDto createCategory(@RequestBody CategoryDto categoryDto) {
+    public CategoryDto createCategory(@RequestBody @Valid CategoryDto categoryDto) {
         log.info("Creating category: {}", categoryDto);
         return categoryService.createCategory(categoryDto);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{categoryId}")
-    public CategoryDto updateCategory(@PathVariable int categoryId, @RequestBody CategoryDto categoryDto) {
+    public CategoryDto updateCategory(@PathVariable int categoryId, @RequestBody @Valid CategoryDto categoryDto) {
         log.info("Updating category (id={}): {}", categoryId, categoryDto);
         return categoryService.updateCategory(categoryId, categoryDto);
     }

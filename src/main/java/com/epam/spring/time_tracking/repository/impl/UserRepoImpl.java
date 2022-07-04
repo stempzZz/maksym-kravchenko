@@ -42,7 +42,7 @@ public class UserRepoImpl implements UserRepo {
     }
 
     @Override
-    public User getUserById(int userId) {
+    public User getUserById(long userId) {
         log.info("Getting user by id: {}", userId);
         return userList.stream()
                 .filter(user -> user.getId() == userId)
@@ -61,7 +61,7 @@ public class UserRepoImpl implements UserRepo {
     }
 
     @Override
-    public User blockUser(int userId, boolean isBlocked) {
+    public User blockUser(long userId, boolean isBlocked) {
         log.info("Blocking user (id={}) with value: {}", userId, isBlocked);
         User user = getUserById(userId);
         user.setBlocked(isBlocked);
@@ -69,7 +69,7 @@ public class UserRepoImpl implements UserRepo {
     }
 
     @Override
-    public User updateUserInfo(int userId, User user) {
+    public User updateUserInfo(long userId, User user) {
         log.info("Updating user's (id={}) information: {}", userId, user);
         User updatedUser = getUserById(userId);
         updatedUser.setLastName(user.getLastName());
@@ -79,7 +79,7 @@ public class UserRepoImpl implements UserRepo {
     }
 
     @Override
-    public User updateUserPassword(int userId, User user) {
+    public User updateUserPassword(long userId, User user) {
         log.info("Updating user's (id={}) password: {}", userId, user);
         User updatedUser = getUserById(userId);
         updatedUser.setPassword(user.getPassword());
@@ -87,13 +87,13 @@ public class UserRepoImpl implements UserRepo {
     }
 
     @Override
-    public void deleteUser(int userId) {
+    public void deleteUser(long userId) {
         log.info("Deleting user with id: {}", userId);
         userList.removeIf(user -> user.getId() == userId);
     }
 
     @Override
-    public boolean checkIfUserExists(int userId) {
+    public boolean checkIfUserExists(long userId) {
         log.info("Checking if user (id={}) exists", userId);
         Optional<User> user = userList.stream()
                 .filter(u -> u.getId() == userId)
@@ -102,7 +102,7 @@ public class UserRepoImpl implements UserRepo {
     }
 
     @Override
-    public boolean checkIfUserIsAdmin(int userId) {
+    public boolean checkIfUserIsAdmin(long userId) {
         log.info("Checking is user (id={}) is admin", userId);
         return getUserById(userId).isAdmin();
     }
