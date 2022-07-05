@@ -13,11 +13,11 @@ public interface ActivityRepo {
 
     Activity createActivity(Activity activity);
 
-    List<Activity> getAdminActivities(int userId);
+    List<Activity> getActivitiesCreatedByUser(int userId, boolean checkForAdmin);
 
     Activity updateActivity(int activityId, Activity activity);
 
-    void deleteActivity(int activityId);
+    void deleteActivityById(int activityId);
 
     void deleteCategoryInActivities(Category category);
 }

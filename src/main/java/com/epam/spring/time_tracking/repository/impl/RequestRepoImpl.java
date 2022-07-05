@@ -113,7 +113,7 @@ public class RequestRepoImpl implements RequestRepo {
         Request request = getRequest(requestId);
         if ((request.isForDelete() && request.getStatus().equals(Request.Status.CONFIRMED)) ||
                 (!request.isForDelete() && !request.getStatus().equals(Request.Status.CONFIRMED)))
-            activityRepo.deleteActivity(request.getActivityId());
+            activityRepo.deleteActivityById(request.getActivityId());
         requestList.remove(request);
     }
 

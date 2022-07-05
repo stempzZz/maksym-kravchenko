@@ -63,9 +63,11 @@ public class ActivityRepoImpl implements ActivityRepo {
     }
 
     @Override
-    public List<Activity> getAdminActivities(int userId) {
-        log.info("Getting activities, which creator (admin) has id: {}", userId);
-        checkIfUserExists(userId, "admin is not found");
+    public List<Activity> getActivitiesCreatedByUser(int userId, boolean checkForAdmin) {
+        log.info("Getting activities, which creator has an id: {}", userId);
+        if (checkForAdmin)
+            if (!userRepo.checkIfUserIsAdmin(userId))
+                throw new RuntimeException("creator is not an admin");
         return activityList.stream()
                 .filter(activity -> activity.getCreatorId() == userId)
                 .collect(Collectors.toList());
@@ -86,9 +88,14 @@ public class ActivityRepoImpl implements ActivityRepo {
     }
 
     @Override
-    public void deleteActivity(int activityId) {
+    public void deleteActivityById(int activityId) {
         log.info("Deleting activity with id: {}", activityId);
         activityList.removeIf(activity -> activity.getId() == activityId);
+    }
+
+    public void deleteActivitiesByCreatorId(int creatorId) {
+        log.info("Deleting activity, which creator has an id: {}", creatorId);
+        activityList.removeIf(activity -> activity.getCreatorId() == creatorId);
     }
 
     @Override

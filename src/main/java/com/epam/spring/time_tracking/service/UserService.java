@@ -1,5 +1,6 @@
 package com.epam.spring.time_tracking.service;
 
+import com.epam.spring.time_tracking.dto.activity.ActivityDto;
 import com.epam.spring.time_tracking.dto.activity.ActivityForAdminProfileDto;
 import com.epam.spring.time_tracking.dto.activity.ActivityForUserProfileDto;
 import com.epam.spring.time_tracking.dto.user.UserDto;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public interface UserService {
 
-    List<UserInfoDto> getUsers();
+    List<UserDto> getUsers();
 
     UserDto getUser(int userId);
 
@@ -19,7 +20,7 @@ public interface UserService {
 
     List<ActivityForUserProfileDto> getUserActivitiesForProfile(int userId);
 
-    List<ActivityForAdminProfileDto> getAdminActivitiesForProfile(int userId);
+    List<ActivityDto> getAdminActivitiesForProfile(int userId);
 
     UserDto blockUser(int userId, boolean isBlocked);
 

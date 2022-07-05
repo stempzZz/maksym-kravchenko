@@ -8,7 +8,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Null;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -17,16 +19,16 @@ public class UserDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int id;
 
-    @NotBlank(message = "'lastName' shouldn't be empty", groups = OnCreate.class)
+    @NotBlank(message = "'lastName' shouldn't be empty", groups = {OnCreate.class, OnUpdate.class})
     @Null(message = "'lastName' should be absent in request", groups = {OnUpdatePassword.class, OnAuthorization.class})
     private String lastName;
 
-    @NotBlank(message = "'firstName' shouldn't be empty", groups = OnCreate.class)
+    @NotBlank(message = "'firstName' shouldn't be empty", groups = {OnCreate.class, OnUpdate.class})
     @Null(message = "'firstName' should be absent in request", groups = {OnUpdatePassword.class, OnAuthorization.class})
     private String firstName;
 
     @Email
-    @NotBlank(message = "'email' shouldn't be empty", groups = {OnCreate.class, OnAuthorization.class})
+    @NotBlank(message = "'email' shouldn't be empty", groups = {OnCreate.class, OnUpdate.class, OnAuthorization.class})
     @Null(message = "'email' should be absent in request", groups = OnUpdatePassword.class)
     private String email;
 
@@ -34,6 +36,7 @@ public class UserDto {
     @Null(message = "'currentPassword' should be absent in request", groups = {OnCreate.class, OnUpdate.class, OnAuthorization.class})
     private String currentPassword;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank(message = "'password' shouldn't be empty", groups = {OnCreate.class, OnUpdatePassword.class, OnAuthorization.class})
     @Null(message = "'password' should be absent in request", groups = OnUpdate.class)
     private String password;
@@ -42,7 +45,13 @@ public class UserDto {
     @Null(message = "'repeatPassword' should be absent in request", groups = {OnUpdate.class, OnAuthorization.class})
     private String repeatPassword;
 
-    private boolean isAdmin;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private int activityCount;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private double spentTime;
+
+    private boolean admin;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private boolean blocked;

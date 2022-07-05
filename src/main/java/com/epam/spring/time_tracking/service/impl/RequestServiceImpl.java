@@ -1,9 +1,9 @@
 package com.epam.spring.time_tracking.service.impl;
 
 import com.epam.spring.time_tracking.dto.activity.ActivityDto;
-import com.epam.spring.time_tracking.dto.activity.ActivityInRequestDto;
 import com.epam.spring.time_tracking.dto.request.RequestDto;
-import com.epam.spring.time_tracking.dto.user.UserInRequestDto;
+import com.epam.spring.time_tracking.mapper.ActivityMapper;
+import com.epam.spring.time_tracking.mapper.RequestMapper;
 import com.epam.spring.time_tracking.model.Activity;
 import com.epam.spring.time_tracking.model.Request;
 import com.epam.spring.time_tracking.model.User;
@@ -13,7 +13,6 @@ import com.epam.spring.time_tracking.repository.UserRepo;
 import com.epam.spring.time_tracking.service.RequestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,14 +26,13 @@ public class RequestServiceImpl implements RequestService {
     private final RequestRepo requestRepo;
     private final ActivityRepo activityRepo;
     private final UserRepo userRepo;
-    private final ModelMapper modelMapper;
 
     @Override
     public List<RequestDto> getRequests() {
         log.info("Getting requests");
         List<Request> requests = requestRepo.getRequests();
         return requests.stream()
-                .map(this::mapRequestToRequestDto)
+                .map(this::mapRequestToRequestDtoForList)
                 .collect(Collectors.toList());
     }
 
@@ -52,14 +50,10 @@ public class RequestServiceImpl implements RequestService {
         if (userRepo.checkIfUserIsAdmin(activityDto.getCreatorId()))
             throw new RuntimeException("creator with given id is not a regular user");
 
-        Activity activity = modelMapper.map(activityDto, Activity.class);
+        Activity activity = ActivityMapper.INSTANCE.fromActividtyDto(activityDto);
         User creator = userRepo.getUserById(activity.getCreatorId());
-
         Request request = requestRepo.createRequestToAdd(activity);
-        RequestDto requestDto = modelMapper.map(request, RequestDto.class);
-        requestDto.setActivity(modelMapper.map(activity, ActivityInRequestDto.class));
-        requestDto.setUser(modelMapper.map(creator, UserInRequestDto.class));
-        return requestDto;
+        return RequestMapper.INSTANCE.toRequestDto(request, activity, creator);
     }
 
     @Override
@@ -71,13 +65,10 @@ public class RequestServiceImpl implements RequestService {
             throw new RuntimeException("activity is not found");
         if (userRepo.checkIfUserIsAdmin(activity.getCreatorId()))
             throw new RuntimeException("activity wasn't created by regular user");
-        User creator = userRepo.getUserById(activity.getCreatorId());
 
+        User creator = userRepo.getUserById(activity.getCreatorId());
         Request request = requestRepo.createRequestToRemove(activity);
-        RequestDto requestDto = modelMapper.map(request, RequestDto.class);
-        requestDto.setActivity(modelMapper.map(activity, ActivityInRequestDto.class));
-        requestDto.setUser(modelMapper.map(creator, UserInRequestDto.class));
-        return requestDto;
+        return RequestMapper.INSTANCE.toRequestDto(request, activity, creator);
     }
 
     @Override
@@ -104,9 +95,13 @@ public class RequestServiceImpl implements RequestService {
         log.info("Mapping Request to RequestDto");
         Activity activity = activityRepo.getActivityById(request.getActivityId());
         User creator = userRepo.getUserById(activity.getCreatorId());
-        RequestDto requestDto = modelMapper.map(request, RequestDto.class);
-        requestDto.setActivity(modelMapper.map(activity, ActivityInRequestDto.class));
-        requestDto.setUser(modelMapper.map(creator, UserInRequestDto.class));
-        return requestDto;
+        return RequestMapper.INSTANCE.toRequestDto(request, activity, creator);
+    }
+
+    private RequestDto mapRequestToRequestDtoForList(Request request) {
+        log.info("Mapping Request to RequestDto");
+        Activity activity = activityRepo.getActivityById(request.getActivityId());
+        User creator = userRepo.getUserById(activity.getCreatorId());
+        return RequestMapper.INSTANCE.toRequestDtoForList(request, activity, creator);
     }
 }
