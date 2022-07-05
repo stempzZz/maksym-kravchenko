@@ -1,8 +1,6 @@
 package com.epam.spring.time_tracking.controller;
 
 import com.epam.spring.time_tracking.dto.activity.ActivityDto;
-import com.epam.spring.time_tracking.dto.group.OnCreate;
-import com.epam.spring.time_tracking.dto.group.OnUpdate;
 import com.epam.spring.time_tracking.dto.user.UserDto;
 import com.epam.spring.time_tracking.dto.user.UserInActivityDto;
 import com.epam.spring.time_tracking.service.ActivityService;
@@ -10,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

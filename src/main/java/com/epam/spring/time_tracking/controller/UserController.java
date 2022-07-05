@@ -1,5 +1,6 @@
 package com.epam.spring.time_tracking.controller;
 
+import com.epam.spring.time_tracking.dto.activity.ActivityDto;
 import com.epam.spring.time_tracking.dto.activity.ActivityForAdminProfileDto;
 import com.epam.spring.time_tracking.dto.activity.ActivityForUserProfileDto;
 import com.epam.spring.time_tracking.dto.group.OnAuthorization;
@@ -28,7 +29,7 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    public List<UserInfoDto> getUsers() {
+    public List<UserDto> getUsers() {
         log.info("Getting users");
         return userService.getUsers();
     }
@@ -63,7 +64,7 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/admin/{userId}/activity")
-    public List<ActivityForAdminProfileDto> getAdminActivitiesForProfile(@PathVariable int userId) {
+    public List<ActivityDto> getAdminActivitiesForProfile(@PathVariable int userId) {
         log.info("Getting activities for admin's profile, who has an id: {}", userId);
         return userService.getAdminActivitiesForProfile(userId);
     }

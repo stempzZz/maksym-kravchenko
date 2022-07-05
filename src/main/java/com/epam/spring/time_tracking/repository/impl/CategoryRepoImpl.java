@@ -65,7 +65,7 @@ public class CategoryRepoImpl implements CategoryRepo {
     @Override
     public void deleteCategory(int categoryId) {
         log.info("Deleting category with id: {}", categoryId);
-        categoryList.removeIf(category -> category.getId() == categoryId);
+        categoryList.removeIf(category -> categoryId != 0 && category.getId() == categoryId);
     }
 
     private boolean checkForUnique(Category category, Language language) {

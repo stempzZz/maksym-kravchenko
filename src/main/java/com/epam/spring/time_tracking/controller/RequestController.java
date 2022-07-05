@@ -36,14 +36,14 @@ public class RequestController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/add")
+    @PostMapping("/activity/add")
     public RequestDto createRequestToAdd(@RequestBody @Validated(OnCreate.class) ActivityDto activityDto) {
         log.info("Creating request to add an activity: {}", activityDto);
         return requestService.createRequestToAdd(activityDto);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/{activityId}/remove")
+    @PostMapping("/activity/{activityId}/remove")
     public RequestDto createRequestToRemove(@PathVariable int activityId) {
         log.info("Creating request to remove an activity with id: {}", activityId);
         return requestService.createRequestToRemove(activityId);
