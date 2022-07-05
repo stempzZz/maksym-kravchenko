@@ -1,8 +1,10 @@
 package com.epam.spring.time_tracking.repository.impl;
 
+import com.epam.spring.time_tracking.exception.NotFoundException;
+import com.epam.spring.time_tracking.exception.RestrictionException;
 import com.epam.spring.time_tracking.model.Activity;
 import com.epam.spring.time_tracking.model.Category;
-import com.epam.spring.time_tracking.model.User;
+import com.epam.spring.time_tracking.model.errors.ErrorMessage;
 import com.epam.spring.time_tracking.repository.ActivityRepo;
 import com.epam.spring.time_tracking.repository.CategoryRepo;
 import com.epam.spring.time_tracking.repository.UserRepo;
@@ -41,7 +43,7 @@ public class ActivityRepoImpl implements ActivityRepo {
         return activityList.stream()
                 .filter(activity -> activity.getId() == activityId)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("activity is not found"));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.ACTIVITY_NOT_FOUND));
     }
 
     @Override
@@ -67,7 +69,7 @@ public class ActivityRepoImpl implements ActivityRepo {
         log.info("Getting activities, which creator has an id: {}", userId);
         if (checkForAdmin)
             if (!userRepo.checkIfUserIsAdmin(userId))
-                throw new RuntimeException("creator is not an admin");
+                throw new RestrictionException(ErrorMessage.CREATOR_IS_NOT_AN_ADMIN);
         return activityList.stream()
                 .filter(activity -> activity.getCreatorId() == userId)
                 .collect(Collectors.toList());
@@ -93,11 +95,6 @@ public class ActivityRepoImpl implements ActivityRepo {
         activityList.removeIf(activity -> activity.getId() == activityId);
     }
 
-    public void deleteActivitiesByCreatorId(int creatorId) {
-        log.info("Deleting activity, which creator has an id: {}", creatorId);
-        activityList.removeIf(activity -> activity.getCreatorId() == creatorId);
-    }
-
     @Override
     public void deleteCategoryInActivities(Category category) {
         log.info("Deleting category in activities: {}", category);
@@ -110,9 +107,4 @@ public class ActivityRepoImpl implements ActivityRepo {
                 });
     }
 
-    private void checkIfUserExists(int userId, String errorMessage) {
-        log.info("Checking if user exists");
-        if (!userRepo.checkIfUserExists(userId))
-            throw new RuntimeException(errorMessage);
-    }
 }

@@ -1,6 +1,9 @@
 package com.epam.spring.time_tracking.repository.impl;
 
+import com.epam.spring.time_tracking.exception.ExistingException;
+import com.epam.spring.time_tracking.exception.NotFoundException;
 import com.epam.spring.time_tracking.model.User;
+import com.epam.spring.time_tracking.model.errors.ErrorMessage;
 import com.epam.spring.time_tracking.repository.UserRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -38,7 +41,7 @@ public class UserRepoImpl implements UserRepo {
         return userList.stream()
                 .filter(user -> user.getEmail().equals(email))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("user is not found"));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.USER_NOT_FOUND));
     }
 
     @Override
@@ -47,14 +50,14 @@ public class UserRepoImpl implements UserRepo {
         return userList.stream()
                 .filter(user -> user.getId() == userId)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("user is not found"));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.USER_NOT_FOUND));
     }
 
     @Override
     public User createUser(User user) {
         log.info("Creating user: {}", user);
         if (!checkForUnique(user))
-            throw new RuntimeException("user with this email already exists");
+            throw new ExistingException(ErrorMessage.USER_EXISTS_WITH_EMAIL);
         user.setId(++idCounter);
         userList.add(user);
         return user;

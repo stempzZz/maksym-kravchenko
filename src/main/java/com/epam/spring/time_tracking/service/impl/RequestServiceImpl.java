@@ -2,11 +2,13 @@ package com.epam.spring.time_tracking.service.impl;
 
 import com.epam.spring.time_tracking.dto.activity.ActivityDto;
 import com.epam.spring.time_tracking.dto.request.RequestDto;
+import com.epam.spring.time_tracking.exception.RestrictionException;
 import com.epam.spring.time_tracking.mapper.ActivityMapper;
 import com.epam.spring.time_tracking.mapper.RequestMapper;
 import com.epam.spring.time_tracking.model.Activity;
 import com.epam.spring.time_tracking.model.Request;
 import com.epam.spring.time_tracking.model.User;
+import com.epam.spring.time_tracking.model.errors.ErrorMessage;
 import com.epam.spring.time_tracking.repository.ActivityRepo;
 import com.epam.spring.time_tracking.repository.RequestRepo;
 import com.epam.spring.time_tracking.repository.UserRepo;
@@ -48,7 +50,7 @@ public class RequestServiceImpl implements RequestService {
         log.info("Creating request to add an activity: {}", activityDto);
 
         if (userRepo.checkIfUserIsAdmin(activityDto.getCreatorId()))
-            throw new RuntimeException("creator with given id is not a regular user");
+            throw new RestrictionException(ErrorMessage.CREATOR_IS_NOT_A_REGULAR_USER);
 
         Activity activity = ActivityMapper.INSTANCE.fromActividtyDto(activityDto);
         User creator = userRepo.getUserById(activity.getCreatorId());
@@ -61,10 +63,8 @@ public class RequestServiceImpl implements RequestService {
         log.info("Creating request to remove an activity with id: {}", activityId);
 
         Activity activity = activityRepo.getActivityById(activityId);
-        if (activity == null)
-            throw new RuntimeException("activity is not found");
         if (userRepo.checkIfUserIsAdmin(activity.getCreatorId()))
-            throw new RuntimeException("activity wasn't created by regular user");
+            throw new RestrictionException(ErrorMessage.CREATOR_IS_NOT_A_REGULAR_USER);
 
         User creator = userRepo.getUserById(activity.getCreatorId());
         Request request = requestRepo.createRequestToRemove(activity);

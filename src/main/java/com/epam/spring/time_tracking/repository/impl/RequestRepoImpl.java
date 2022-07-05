@@ -1,9 +1,11 @@
 package com.epam.spring.time_tracking.repository.impl;
 
+import com.epam.spring.time_tracking.exception.NotFoundException;
 import com.epam.spring.time_tracking.model.Activity;
 import com.epam.spring.time_tracking.model.Request;
 import com.epam.spring.time_tracking.model.User;
 import com.epam.spring.time_tracking.model.UserActivity;
+import com.epam.spring.time_tracking.model.errors.ErrorMessage;
 import com.epam.spring.time_tracking.repository.ActivityRepo;
 import com.epam.spring.time_tracking.repository.RequestRepo;
 import com.epam.spring.time_tracking.repository.UserActivityRepo;
@@ -38,7 +40,7 @@ public class RequestRepoImpl implements RequestRepo {
         return requestList.stream()
                 .filter(r -> r.getId() == requestId)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("request is not found"));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.REQUEST_NOT_FOUND));
     }
 
     @Override
