@@ -3,6 +3,7 @@ package com.epam.spring.time_tracking.service.impl;
 import com.epam.spring.time_tracking.dto.activity.ActivityDto;
 import com.epam.spring.time_tracking.dto.user.UserDto;
 import com.epam.spring.time_tracking.dto.user.UserInActivityDto;
+import com.epam.spring.time_tracking.exception.RestrictionException;
 import com.epam.spring.time_tracking.mapper.ActivityMapper;
 import com.epam.spring.time_tracking.mapper.UserActivityMapper;
 import com.epam.spring.time_tracking.mapper.UserMapper;
@@ -10,6 +11,7 @@ import com.epam.spring.time_tracking.model.Activity;
 import com.epam.spring.time_tracking.model.Category;
 import com.epam.spring.time_tracking.model.User;
 import com.epam.spring.time_tracking.model.UserActivity;
+import com.epam.spring.time_tracking.model.errors.ErrorMessage;
 import com.epam.spring.time_tracking.repository.*;
 import com.epam.spring.time_tracking.service.ActivityService;
 import lombok.RequiredArgsConstructor;
@@ -61,7 +63,7 @@ public class ActivityServiceImpl implements ActivityService {
         log.info("Creating activity: {}", activityDto);
 
         if (!userRepo.getUserById(activityDto.getCreatorId()).isAdmin())
-            throw new RuntimeException("creator must be an admin for creating an activity instantly");
+            throw new RestrictionException(ErrorMessage.INSTANTLY_ACTIVITY_CREATION);
 
         Activity activity = activityRepo.createActivity(activityWithSetCategories(activityDto));
         return ActivityMapper.INSTANCE.toActivityDto(activity);

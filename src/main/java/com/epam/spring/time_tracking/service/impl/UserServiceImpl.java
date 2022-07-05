@@ -3,12 +3,14 @@ package com.epam.spring.time_tracking.service.impl;
 import com.epam.spring.time_tracking.dto.activity.ActivityDto;
 import com.epam.spring.time_tracking.dto.activity.ActivityForUserProfileDto;
 import com.epam.spring.time_tracking.dto.user.UserDto;
+import com.epam.spring.time_tracking.exception.VerificationException;
 import com.epam.spring.time_tracking.mapper.ActivityMapper;
 import com.epam.spring.time_tracking.mapper.UserActivityMapper;
 import com.epam.spring.time_tracking.mapper.UserMapper;
 import com.epam.spring.time_tracking.model.Activity;
 import com.epam.spring.time_tracking.model.User;
 import com.epam.spring.time_tracking.model.UserActivity;
+import com.epam.spring.time_tracking.model.errors.ErrorMessage;
 import com.epam.spring.time_tracking.repository.ActivityRepo;
 import com.epam.spring.time_tracking.repository.RequestRepo;
 import com.epam.spring.time_tracking.repository.UserActivityRepo;
@@ -51,7 +53,7 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto userDto) {
         log.info("Creating user: {}", userDto);
         if (!userDto.getPassword().equals(userDto.getRepeatPassword()))
-            throw new RuntimeException("password confirmation isn't success");
+            throw new VerificationException(ErrorMessage.PASSWORD_CONFIRMATION_IS_FAILED);
         User user = UserMapper.INSTANCE.fromUserDto(userDto);
         user = userRepo.createUser(user);
         return UserMapper.INSTANCE.toUserDtoForShowingInformation(user);
@@ -63,7 +65,7 @@ public class UserServiceImpl implements UserService {
         User user = UserMapper.INSTANCE.fromUserDto(userDto);
         user = userRepo.getUserByEmail(user.getEmail());
         if (!userDto.getPassword().equals(user.getPassword()))
-            throw new RuntimeException("wrong password was entered");
+            throw new VerificationException(ErrorMessage.PASSWORD_VERIFICATION_IS_FAILED);
         return UserMapper.INSTANCE.toUserDtoForShowingInformation(user);
     }
 
@@ -105,9 +107,9 @@ public class UserServiceImpl implements UserService {
         log.info("Updating user's (id={}) password: {}", userId, userDto);
         User user = userRepo.getUserById(userId);
         if (!userDto.getCurrentPassword().equals(user.getPassword()))
-            throw new RuntimeException("wrong current password was entered");
+            throw new VerificationException(ErrorMessage.PASSWORD_VERIFICATION_IS_FAILED);
         if (!userDto.getPassword().equals(userDto.getRepeatPassword()))
-            throw new RuntimeException("password confirmation isn't success");
+            throw new VerificationException(ErrorMessage.PASSWORD_CONFIRMATION_IS_FAILED);
         User updatedUser = UserMapper.INSTANCE.fromUserDto(userDto);
         user = userRepo.updateUserPassword(userId, updatedUser);
         return UserMapper.INSTANCE.toUserDtoForShowingInformation(user);
