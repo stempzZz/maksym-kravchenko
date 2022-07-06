@@ -24,8 +24,6 @@ public interface UserRepo {
 
     void deleteUser(long userId);
 
-    boolean checkIfUserExists(long userId);
-
     boolean checkIfUserIsAdmin(long userId);
 
 }

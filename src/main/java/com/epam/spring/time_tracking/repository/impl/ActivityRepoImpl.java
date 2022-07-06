@@ -106,5 +106,4 @@ public class ActivityRepoImpl implements ActivityRepo {
                         activity.getCategories().add(Category.builder().nameEN("Other").nameUA("Інше").build());
                 });
     }
-
 }

@@ -104,5 +104,4 @@ public class RequestServiceImpl implements RequestService {
         User creator = userRepo.getUserById(activity.getCreatorId());
         return RequestMapper.INSTANCE.toRequestDtoForList(request, activity, creator);
     }
-
 }
