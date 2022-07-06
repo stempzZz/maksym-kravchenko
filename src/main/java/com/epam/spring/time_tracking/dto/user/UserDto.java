@@ -4,6 +4,7 @@ import com.epam.spring.time_tracking.dto.group.OnAuthorization;
 import com.epam.spring.time_tracking.dto.group.OnCreate;
 import com.epam.spring.time_tracking.dto.group.OnUpdate;
 import com.epam.spring.time_tracking.dto.group.OnUpdatePassword;
+import com.epam.spring.time_tracking.dto.validation.Password;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -37,6 +38,7 @@ public class UserDto {
     private String currentPassword;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Password(groups = {OnCreate.class, OnUpdatePassword.class})
     @NotBlank(message = "'password' shouldn't be empty", groups = {OnCreate.class, OnUpdatePassword.class, OnAuthorization.class})
     @Null(message = "'password' should be absent in request", groups = OnUpdate.class)
     private String password;
