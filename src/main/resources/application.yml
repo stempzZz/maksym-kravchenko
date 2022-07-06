@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: Time Tracking
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  info:
+    env:
+      enabled: true
+
+info:
+  application:
+    name: ${spring.application.name}
+    description: Building a Spring application from Servlet-based
+    version: '@project.version@'
+    spring-boot-version: '@project.parent@'

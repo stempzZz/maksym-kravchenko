@@ -3,7 +3,7 @@ package com.epam.spring.time_tracking.dto.user;
 import lombok.Data;
 
 @Data
-public class UserInRequestDto {
+public class UserOnlyNameDto {
 
     private int id;
     private String lastName;

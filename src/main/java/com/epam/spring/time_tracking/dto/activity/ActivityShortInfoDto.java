@@ -1,20 +1,19 @@
 package com.epam.spring.time_tracking.dto.activity;
 
 import com.epam.spring.time_tracking.dto.category.CategoryDto;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class ActivityForUserDto {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class ActivityShortInfoDto {
 
     private int id;
     private String name;
     private List<CategoryDto> categories;
     private String description;
     private String image;
-    private int peopleCount;
-    private LocalDateTime createTime;
 
 }

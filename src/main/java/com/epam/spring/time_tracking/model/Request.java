@@ -27,9 +27,8 @@ public class Request {
         private static final Map<String, Status> lookup = new HashMap<>();
 
         static {
-            for (Request.Status s : Request.Status.values()) {
+            for (Request.Status s : Request.Status.values())
                 lookup.put(s.getValue(), s);
-            }
         }
 
         Status(String value) {

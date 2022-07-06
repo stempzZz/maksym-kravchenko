@@ -1,6 +1,9 @@
 package com.epam.spring.time_tracking.repository.impl;
 
-import com.epam.spring.time_tracking.lang.Language;
+import com.epam.spring.time_tracking.exception.ExistingException;
+import com.epam.spring.time_tracking.exception.NotFoundException;
+import com.epam.spring.time_tracking.model.errors.ErrorMessage;
+import com.epam.spring.time_tracking.model.enums.Language;
 import com.epam.spring.time_tracking.model.Category;
 import com.epam.spring.time_tracking.repository.CategoryRepo;
 import lombok.RequiredArgsConstructor;
@@ -34,16 +37,16 @@ public class CategoryRepoImpl implements CategoryRepo {
         return categoryList.stream()
                 .filter(category -> category.getId() == categoryId)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("category is not found"));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.CATEGORY_NOT_FOUND));
     }
 
     @Override
     public Category createCategory(Category category) {
         log.info("Creating category: {}", category);
         if (!checkForUnique(category, Language.EN))
-            throw new RuntimeException("category name (EN) already exists");
+            throw new ExistingException(ErrorMessage.CATEGORY_EXISTS_WITH_NAME_EN);
         if (!checkForUnique(category, Language.UA))
-            throw new RuntimeException("category name (UA) already exists");
+            throw new ExistingException(ErrorMessage.CATEGORY_EXISTS_WITH_NAME_UA);
         category.setId(++idCounter);
         categoryList.add(category);
         return category;
@@ -52,11 +55,11 @@ public class CategoryRepoImpl implements CategoryRepo {
     @Override
     public Category updateCategory(int categoryId, Category category) {
         log.info("Updating category (id={}): {}", categoryId, category);
-        if (!checkForUnique(category, Language.EN))
-            throw new RuntimeException("category name (EN) already exists");
-        if (!checkForUnique(category, Language.UA))
-            throw new RuntimeException("category name (UA) already exists");
         Category updatedCategory = getCategory(categoryId);
+        if (!category.getNameEN().equals(updatedCategory.getNameEN()) && !checkForUnique(category, Language.EN))
+            throw new ExistingException(ErrorMessage.CATEGORY_EXISTS_WITH_NAME_EN);
+        if (!category.getNameUA().equals(updatedCategory.getNameUA()) && !checkForUnique(category, Language.UA))
+            throw new ExistingException(ErrorMessage.CATEGORY_EXISTS_WITH_NAME_UA);
         updatedCategory.setNameEN(category.getNameEN());
         updatedCategory.setNameUA(category.getNameUA());
         return updatedCategory;
@@ -65,7 +68,7 @@ public class CategoryRepoImpl implements CategoryRepo {
     @Override
     public void deleteCategory(int categoryId) {
         log.info("Deleting category with id: {}", categoryId);
-        categoryList.removeIf(category -> category.getId() == categoryId);
+        categoryList.removeIf(category -> categoryId != 0 && category.getId() == categoryId);
     }
 
     private boolean checkForUnique(Category category, Language language) {

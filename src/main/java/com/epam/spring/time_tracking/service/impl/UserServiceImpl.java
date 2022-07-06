@@ -1,21 +1,23 @@
 package com.epam.spring.time_tracking.service.impl;
 
-import com.epam.spring.time_tracking.dto.activity.ActivityForAdminProfileDto;
+import com.epam.spring.time_tracking.dto.activity.ActivityDto;
 import com.epam.spring.time_tracking.dto.activity.ActivityForUserProfileDto;
 import com.epam.spring.time_tracking.dto.user.UserDto;
-import com.epam.spring.time_tracking.dto.user.UserInfoDto;
-import com.epam.spring.time_tracking.dto.user.UserInputDto;
-import com.epam.spring.time_tracking.dto.user.UserLoginDto;
+import com.epam.spring.time_tracking.exception.VerificationException;
+import com.epam.spring.time_tracking.mapper.ActivityMapper;
+import com.epam.spring.time_tracking.mapper.UserActivityMapper;
+import com.epam.spring.time_tracking.mapper.UserMapper;
 import com.epam.spring.time_tracking.model.Activity;
 import com.epam.spring.time_tracking.model.User;
 import com.epam.spring.time_tracking.model.UserActivity;
+import com.epam.spring.time_tracking.model.errors.ErrorMessage;
 import com.epam.spring.time_tracking.repository.ActivityRepo;
+import com.epam.spring.time_tracking.repository.RequestRepo;
 import com.epam.spring.time_tracking.repository.UserActivityRepo;
 import com.epam.spring.time_tracking.repository.UserRepo;
 import com.epam.spring.time_tracking.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,14 +31,14 @@ public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
     private final UserActivityRepo userActivityRepo;
     private final ActivityRepo activityRepo;
-    private final ModelMapper modelMapper;
+    private final RequestRepo requestRepo;
 
     @Override
-    public List<UserInfoDto> getUsers() {
+    public List<UserDto> getUsers() {
         log.info("Getting users");
         List<User> users = userRepo.getUsers();
         return users.stream()
-                .map(user -> modelMapper.map(user, UserInfoDto.class))
+                .map(UserMapper.INSTANCE::toUserDtoForShowingInformation)
                 .collect(Collectors.toList());
     }
 
@@ -44,27 +46,27 @@ public class UserServiceImpl implements UserService {
     public UserDto getUser(int userId) {
         log.info("Getting user with id: {}", userId);
         User user = userRepo.getUserById(userId);
-        return modelMapper.map(user, UserDto.class);
+        return UserMapper.INSTANCE.toUserDto(user);
     }
 
     @Override
-    public UserDto createUser(UserInputDto userInputDto) {
-        log.info("Creating user: {}", userInputDto);
-        if (!userInputDto.getPassword().equals(userInputDto.getRepeatPassword()))
-            throw new RuntimeException("password confirmation isn't success");
-        User user = modelMapper.map(userInputDto, User.class);
+    public UserDto createUser(UserDto userDto) {
+        log.info("Creating user: {}", userDto);
+        if (!userDto.getPassword().equals(userDto.getRepeatPassword()))
+            throw new VerificationException(ErrorMessage.PASSWORD_CONFIRMATION_IS_FAILED);
+        User user = UserMapper.INSTANCE.fromUserDto(userDto);
         user = userRepo.createUser(user);
-        return modelMapper.map(user, UserDto.class);
+        return UserMapper.INSTANCE.toUserDtoForShowingInformation(user);
     }
 
     @Override
-    public UserDto authUser(UserLoginDto userLoginDto) {
-        log.info("Authorizing user: {}", userLoginDto);
-        User user = modelMapper.map(userLoginDto, User.class);
+    public UserDto authUser(UserDto userDto) {
+        log.info("Authorizing user: {}", userDto);
+        User user = UserMapper.INSTANCE.fromUserDto(userDto);
         user = userRepo.getUserByEmail(user.getEmail());
-        if (!userLoginDto.getPassword().equals(user.getPassword()))
-            throw new RuntimeException("wrong password was entered");
-        return modelMapper.map(user, UserDto.class);
+        if (!userDto.getPassword().equals(user.getPassword()))
+            throw new VerificationException(ErrorMessage.PASSWORD_VERIFICATION_IS_FAILED);
+        return UserMapper.INSTANCE.toUserDtoForShowingInformation(user);
     }
 
     @Override
@@ -72,22 +74,16 @@ public class UserServiceImpl implements UserService {
         log.info("Getting activities for user's profile, who has an id: {}", userId);
         List<UserActivity> userActivityList = userActivityRepo.getActivitiesForUser(userId);
         return userActivityList.stream()
-                .map(userActivity -> {
-                    Activity activity = userActivity.getActivity();
-                    ActivityForUserProfileDto activityDto = modelMapper.map(activity, ActivityForUserProfileDto.class);
-                    activityDto.setSpentTime(userActivity.getSpentTime());
-                    activityDto.setStatus(userActivity.getStatus());
-                    return activityDto;
-                })
+                .map(UserActivityMapper.INSTANCE::toActivityForUserProfileDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ActivityForAdminProfileDto> getAdminActivitiesForProfile(int userId) {
+    public List<ActivityDto> getAdminActivitiesForProfile(int userId) {
         log.info("Getting activities for admin's profile, who has an id: {}", userId);
-        List<Activity> activities = activityRepo.getAdminActivities(userId);
+        List<Activity> activities = activityRepo.getActivitiesCreatedByUser(userId, true);
         return activities.stream()
-                .map(activity -> modelMapper.map(activity, ActivityForAdminProfileDto.class))
+                .map(ActivityMapper.INSTANCE::toActivityDtoForAdminProfile)
                 .collect(Collectors.toList());
     }
 
@@ -95,33 +91,38 @@ public class UserServiceImpl implements UserService {
     public UserDto blockUser(int userId, boolean isBlocked) {
         log.info("Blocking user (id={}) with value: {}", userId, isBlocked);
         User user = userRepo.blockUser(userId, isBlocked);
-        return modelMapper.map(user, UserDto.class);
+        return UserMapper.INSTANCE.toUserDtoForShowingInformation(user);
     }
 
     @Override
-    public UserDto updateUserInfo(int userId, UserInputDto userInputDto) {
-        log.info("Updating user's (id={}) information: {}", userId, userInputDto);
-        User user = modelMapper.map(userInputDto, User.class);
+    public UserDto updateUserInfo(int userId, UserDto userDto) {
+        log.info("Updating user's (id={}) information: {}", userId, userDto);
+        User user = UserMapper.INSTANCE.fromUserDto(userDto);
         user = userRepo.updateUserInfo(userId, user);
-        return modelMapper.map(user, UserDto.class);
+        return UserMapper.INSTANCE.toUserDtoForShowingInformation(user);
     }
 
     @Override
-    public UserDto updateUserPassword(int userId, UserInputDto userInputDto) {
-        log.info("Updating user's (id={}) password: {}", userId, userInputDto);
+    public UserDto updateUserPassword(int userId, UserDto userDto) {
+        log.info("Updating user's (id={}) password: {}", userId, userDto);
         User user = userRepo.getUserById(userId);
-        if (!userInputDto.getCurrentPassword().equals(user.getPassword()))
-            throw new RuntimeException("wrong current password was entered");
-        if (!userInputDto.getPassword().equals(userInputDto.getRepeatPassword()))
-            throw new RuntimeException("password confirmation isn't success");
-        User updatedUser = modelMapper.map(userInputDto, User.class);
+        if (!userDto.getCurrentPassword().equals(user.getPassword()))
+            throw new VerificationException(ErrorMessage.PASSWORD_VERIFICATION_IS_FAILED);
+        if (!userDto.getPassword().equals(userDto.getRepeatPassword()))
+            throw new VerificationException(ErrorMessage.PASSWORD_CONFIRMATION_IS_FAILED);
+        User updatedUser = UserMapper.INSTANCE.fromUserDto(userDto);
         user = userRepo.updateUserPassword(userId, updatedUser);
-        return modelMapper.map(user, UserDto.class);
+        return UserMapper.INSTANCE.toUserDtoForShowingInformation(user);
     }
 
     @Override
     public void deleteUser(int userId) {
         log.info("Deleting user with id: {}", userId);
+        activityRepo.getActivitiesCreatedByUser(userId, false).forEach(activity -> {
+            userActivityRepo.deleteActivity(activity.getId());
+            requestRepo.deleteRequestsWithActivity(activity.getId());
+            activityRepo.deleteActivityById(activity.getId());
+        });
         userActivityRepo.removeUserFromActivities(userId);
         userRepo.deleteUser(userId);
     }

@@ -1,7 +1,10 @@
 package com.epam.spring.time_tracking.repository.impl;
 
+import com.epam.spring.time_tracking.exception.NotFoundException;
+import com.epam.spring.time_tracking.exception.RestrictionException;
 import com.epam.spring.time_tracking.model.Activity;
 import com.epam.spring.time_tracking.model.Category;
+import com.epam.spring.time_tracking.model.errors.ErrorMessage;
 import com.epam.spring.time_tracking.repository.ActivityRepo;
 import com.epam.spring.time_tracking.repository.CategoryRepo;
 import com.epam.spring.time_tracking.repository.UserRepo;
@@ -40,30 +43,33 @@ public class ActivityRepoImpl implements ActivityRepo {
         return activityList.stream()
                 .filter(activity -> activity.getId() == activityId)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("activity is not found"));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.ACTIVITY_NOT_FOUND));
     }
 
     @Override
-    public Activity createActivity(Activity activity, boolean isForRequest) {
+    public Activity createActivity(Activity activity) {
         log.info("Creating activity: {}", activity);
-        log.info("Creating activity for request: {}", isForRequest);
-        checkIfUserExists(activity.getCreatorId(), "creator is not found");
+
+        if (userRepo.checkIfUserIsAdmin(activity.getCreatorId()))
+            activity.setStatus(Activity.Status.BY_ADMIN);
+        else
+            activity.setStatus(Activity.Status.ADD_WAITING);
+
         activity.setId(++idCounter);
         if (activity.getCategories() == null || activity.getCategories().isEmpty())
             activity.setCategories(List.of(categoryRepo.getCategory(0)));
         activity.setCreateTime(LocalDateTime.now());
-        if (isForRequest)
-            activity.setStatus(Activity.Status.ADD_WAITING);
-        else
-            activity.setStatus(Activity.Status.BY_ADMIN);
+
         activityList.add(activity);
         return activity;
     }
 
     @Override
-    public List<Activity> getAdminActivities(int userId) {
-        log.info("Getting activities, which creator (admin) has id: {}", userId);
-        checkIfUserExists(userId, "admin is not found");
+    public List<Activity> getActivitiesCreatedByUser(int userId, boolean checkForAdmin) {
+        log.info("Getting activities, which creator has an id: {}", userId);
+        if (checkForAdmin)
+            if (!userRepo.checkIfUserIsAdmin(userId))
+                throw new RestrictionException(ErrorMessage.CREATOR_IS_NOT_AN_ADMIN);
         return activityList.stream()
                 .filter(activity -> activity.getCreatorId() == userId)
                 .collect(Collectors.toList());
@@ -84,7 +90,7 @@ public class ActivityRepoImpl implements ActivityRepo {
     }
 
     @Override
-    public void deleteActivity(int activityId) {
+    public void deleteActivityById(int activityId) {
         log.info("Deleting activity with id: {}", activityId);
         activityList.removeIf(activity -> activity.getId() == activityId);
     }
@@ -99,12 +105,6 @@ public class ActivityRepoImpl implements ActivityRepo {
                     if (activity.getCategories().isEmpty())
                         activity.getCategories().add(Category.builder().nameEN("Other").nameUA("Інше").build());
                 });
-    }
-
-    private void checkIfUserExists(int userId, String errorMessage) {
-        log.info("Checking if user exists");
-        if (!userRepo.checkIfUserExists(userId))
-            throw new RuntimeException(errorMessage);
     }
 
 }

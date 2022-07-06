@@ -1,6 +1,9 @@
 package com.epam.spring.time_tracking.repository.impl;
 
+import com.epam.spring.time_tracking.exception.ExistingException;
+import com.epam.spring.time_tracking.exception.NotFoundException;
 import com.epam.spring.time_tracking.model.User;
+import com.epam.spring.time_tracking.model.errors.ErrorMessage;
 import com.epam.spring.time_tracking.repository.UserRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -38,30 +41,30 @@ public class UserRepoImpl implements UserRepo {
         return userList.stream()
                 .filter(user -> user.getEmail().equals(email))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("user is not found"));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.USER_NOT_FOUND));
     }
 
     @Override
-    public User getUserById(int userId) {
+    public User getUserById(long userId) {
         log.info("Getting user by id: {}", userId);
         return userList.stream()
                 .filter(user -> user.getId() == userId)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("user is not found"));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.USER_NOT_FOUND));
     }
 
     @Override
     public User createUser(User user) {
         log.info("Creating user: {}", user);
         if (!checkForUnique(user))
-            throw new RuntimeException("user with this email already exists");
+            throw new ExistingException(ErrorMessage.USER_EXISTS_WITH_EMAIL);
         user.setId(++idCounter);
         userList.add(user);
         return user;
     }
 
     @Override
-    public User blockUser(int userId, boolean isBlocked) {
+    public User blockUser(long userId, boolean isBlocked) {
         log.info("Blocking user (id={}) with value: {}", userId, isBlocked);
         User user = getUserById(userId);
         user.setBlocked(isBlocked);
@@ -69,7 +72,7 @@ public class UserRepoImpl implements UserRepo {
     }
 
     @Override
-    public User updateUserInfo(int userId, User user) {
+    public User updateUserInfo(long userId, User user) {
         log.info("Updating user's (id={}) information: {}", userId, user);
         User updatedUser = getUserById(userId);
         updatedUser.setLastName(user.getLastName());
@@ -79,7 +82,7 @@ public class UserRepoImpl implements UserRepo {
     }
 
     @Override
-    public User updateUserPassword(int userId, User user) {
+    public User updateUserPassword(long userId, User user) {
         log.info("Updating user's (id={}) password: {}", userId, user);
         User updatedUser = getUserById(userId);
         updatedUser.setPassword(user.getPassword());
@@ -87,22 +90,13 @@ public class UserRepoImpl implements UserRepo {
     }
 
     @Override
-    public void deleteUser(int userId) {
+    public void deleteUser(long userId) {
         log.info("Deleting user with id: {}", userId);
         userList.removeIf(user -> user.getId() == userId);
     }
 
     @Override
-    public boolean checkIfUserExists(int userId) {
-        log.info("Checking if user (id={}) exists", userId);
-        Optional<User> user = userList.stream()
-                .filter(u -> u.getId() == userId)
-                .findFirst();
-        return user.isPresent();
-    }
-
-    @Override
-    public boolean checkIfUserIsAdmin(int userId) {
+    public boolean checkIfUserIsAdmin(long userId) {
         log.info("Checking is user (id={}) is admin", userId);
         return getUserById(userId).isAdmin();
     }

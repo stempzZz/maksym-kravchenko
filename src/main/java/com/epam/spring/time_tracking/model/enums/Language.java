@@ -1,4 +1,4 @@
-package com.epam.spring.time_tracking.lang;
+package com.epam.spring.time_tracking.model.enums;
 
 public enum Language {
 
