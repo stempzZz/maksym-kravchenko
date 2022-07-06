@@ -21,15 +21,15 @@ public class ActivityDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int id;
 
-    @NotBlank(message = "'name' shouldn't be empty")
+    @NotBlank(message = "{validation.not_blank.name}")
     private String name;
 
     private List<Integer> categoryIds;
 
-    @Null(message = "'categories' should be absent in request")
+    @Null(message = "{validation.null.categories}")
     private List<CategoryDto> categories;
 
-    @NotBlank(message = "'description' shouldn't be empty")
+    @NotBlank(message = "{validation.not_blank.description}")
     private String description;
 
     private String image;
@@ -40,9 +40,9 @@ public class ActivityDto {
     @NotNull(message = "'creatorId' shouldn't be empty", groups = OnCreate.class)
     private int creatorId;
 
-    @Null(message = "'createTime' should be absent in request", groups = {OnCreate.class, OnUpdate.class})
+    @Null(message = "{validation.null.create_time}", groups = {OnCreate.class, OnUpdate.class})
     private LocalDateTime createTime;
 
-    @Null(message = "'status' should be absent in request", groups = {OnCreate.class, OnUpdate.class})
+    @Null(message = "{validation.null.status}", groups = {OnCreate.class, OnUpdate.class})
     private Activity.Status status;
 }

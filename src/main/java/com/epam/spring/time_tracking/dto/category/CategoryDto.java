@@ -11,9 +11,10 @@ public class CategoryDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int id;
 
-    @NotBlank(message = "'nameEN' shouldn't be empty")
+    @NotBlank(message = "{validation.not_blank.name_en}")
     private String nameEN;
 
-    @NotBlank(message = "'nameUA' shouldn't be empty")
+    @NotBlank(message = "{validation.not_blank.name_ua}")
     private String nameUA;
+
 }

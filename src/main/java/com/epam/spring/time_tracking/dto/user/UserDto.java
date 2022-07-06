@@ -20,31 +20,31 @@ public class UserDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int id;
 
-    @NotBlank(message = "'lastName' shouldn't be empty", groups = {OnCreate.class, OnUpdate.class})
-    @Null(message = "'lastName' should be absent in request", groups = {OnUpdatePassword.class, OnAuthorization.class})
+    @NotBlank(message = "{validation.not_blank.last_name}", groups = {OnCreate.class, OnUpdate.class})
+    @Null(message = "{validation.null.last_name}", groups = {OnUpdatePassword.class, OnAuthorization.class})
     private String lastName;
 
-    @NotBlank(message = "'firstName' shouldn't be empty", groups = {OnCreate.class, OnUpdate.class})
-    @Null(message = "'firstName' should be absent in request", groups = {OnUpdatePassword.class, OnAuthorization.class})
+    @NotBlank(message = "{validation.not_blank.first_name}", groups = {OnCreate.class, OnUpdate.class})
+    @Null(message = "{validation.null.first_name}", groups = {OnUpdatePassword.class, OnAuthorization.class})
     private String firstName;
 
     @Email
-    @NotBlank(message = "'email' shouldn't be empty", groups = {OnCreate.class, OnUpdate.class, OnAuthorization.class})
-    @Null(message = "'email' should be absent in request", groups = OnUpdatePassword.class)
+    @NotBlank(message = "{validation.not_blank.email}", groups = {OnCreate.class, OnUpdate.class, OnAuthorization.class})
+    @Null(message = "{validation.null.email}", groups = OnUpdatePassword.class)
     private String email;
 
-    @NotBlank(message = "'currentPassword' shouldn't be empty", groups = OnUpdatePassword.class)
-    @Null(message = "'currentPassword' should be absent in request", groups = {OnCreate.class, OnUpdate.class, OnAuthorization.class})
+    @NotBlank(message = "{validation.not_blank.current_password}", groups = OnUpdatePassword.class)
+    @Null(message = "{validation.null.current_password}", groups = {OnCreate.class, OnUpdate.class, OnAuthorization.class})
     private String currentPassword;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Password(groups = {OnCreate.class, OnUpdatePassword.class})
-    @NotBlank(message = "'password' shouldn't be empty", groups = {OnCreate.class, OnUpdatePassword.class, OnAuthorization.class})
-    @Null(message = "'password' should be absent in request", groups = OnUpdate.class)
+    @NotBlank(message = "{validation.not_blank.password}", groups = {OnCreate.class, OnUpdatePassword.class, OnAuthorization.class})
+    @Null(message = "{validation.null.password}", groups = OnUpdate.class)
     private String password;
 
-    @NotBlank(message = "'repeatPassword' shouldn't be empty", groups = {OnCreate.class, OnUpdatePassword.class})
-    @Null(message = "'repeatPassword' should be absent in request", groups = {OnUpdate.class, OnAuthorization.class})
+    @NotBlank(message = "{validation.not_blank.repeat_password}", groups = {OnCreate.class, OnUpdatePassword.class})
+    @Null(message = "{validation.null.repeat_password}", groups = {OnUpdate.class, OnAuthorization.class})
     private String repeatPassword;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -57,4 +57,5 @@ public class UserDto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private boolean blocked;
+
 }
