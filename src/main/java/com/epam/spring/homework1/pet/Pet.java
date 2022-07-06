@@ -16,6 +16,8 @@ public class Pet {
     }
 
     public void printPets() {
-        animals.forEach(i -> System.out.println(i.getClass().getSimpleName()));
+        animals.stream()
+                .map(animal -> animal.getClass().getSimpleName())
+                .forEach(System.out::println);
     }
 }

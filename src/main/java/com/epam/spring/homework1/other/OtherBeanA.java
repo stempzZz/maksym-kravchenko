@@ -14,5 +14,4 @@ public class OtherBeanA {
         System.out.println(this.getClass().getSimpleName() + ". " +
                 beanA.getClass().getSimpleName() + " was injected through the constructor");
     }
-
 }
