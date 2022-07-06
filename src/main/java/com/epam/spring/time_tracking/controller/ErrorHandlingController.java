@@ -1,6 +1,8 @@
 package com.epam.spring.time_tracking.controller;
 
-import com.epam.spring.time_tracking.exception.*;
+import com.epam.spring.time_tracking.exception.BadRequestException;
+import com.epam.spring.time_tracking.exception.NotFoundException;
+import com.epam.spring.time_tracking.exception.RestrictionException;
 import com.epam.spring.time_tracking.model.errors.Error;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -41,4 +43,5 @@ public class ErrorHandlingController {
         log.error("handleException: exception {}", ex.getMessage(), ex);
         return new Error(ex.getMessage(), LocalDateTime.now());
     }
+
 }
