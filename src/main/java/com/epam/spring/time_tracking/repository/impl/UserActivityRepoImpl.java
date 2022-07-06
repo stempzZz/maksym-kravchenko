@@ -156,4 +156,5 @@ public class UserActivityRepoImpl implements UserActivityRepo {
             throw new RestrictionException(ErrorMessage.ACTIVITY_IS_NOT_AVAILABLE);
         }
     }
+
 }

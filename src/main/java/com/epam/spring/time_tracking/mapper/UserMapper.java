@@ -25,4 +25,5 @@ public interface UserMapper {
     UserDto toUserDtoForShowingInformation(User user);
 
     User fromUserDto(UserDto userDto);
+
 }

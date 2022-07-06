@@ -20,4 +20,5 @@ public interface ActivityRepo {
     void deleteActivityById(int activityId);
 
     void deleteCategoryInActivities(Category category);
+
 }

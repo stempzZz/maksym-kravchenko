@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class User {
+
     private int id;
     private String lastName;
     private String firstName;
@@ -13,4 +14,5 @@ public class User {
     private double spentTime;
     private boolean admin;
     private boolean blocked;
+
 }

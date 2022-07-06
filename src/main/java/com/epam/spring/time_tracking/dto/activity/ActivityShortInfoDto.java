@@ -9,9 +9,11 @@ import java.util.List;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ActivityShortInfoDto {
+
     private int id;
     private String name;
     private List<CategoryDto> categories;
     private String description;
     private String image;
+
 }

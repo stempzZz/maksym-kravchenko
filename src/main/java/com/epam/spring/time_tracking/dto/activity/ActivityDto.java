@@ -45,4 +45,5 @@ public class ActivityDto {
 
     @Null(message = "{validation.null.status}", groups = {OnCreate.class, OnUpdate.class})
     private Activity.Status status;
+
 }

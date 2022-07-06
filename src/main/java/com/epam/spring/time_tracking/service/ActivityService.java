@@ -33,4 +33,5 @@ public interface ActivityService {
     ActivityDto updateActivity(int activityId, ActivityDto activityDto);
 
     void deleteActivity(int activityId);
+
 }

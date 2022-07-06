@@ -30,5 +30,6 @@ public interface RequestMapper {
     @Mapping(source = "request.status", target = "status")
     @Mapping(source = "request.forDelete", target = "forDelete")
     @Mapping(source = "request.createTime", target = "createTime")
-    RequestDto toRequestDtoForList(Request request, Activity activity, User user); //////////////
+    RequestDto toRequestDtoForList(Request request, Activity activity, User user);
+
 }

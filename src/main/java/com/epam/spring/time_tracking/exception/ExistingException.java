@@ -11,4 +11,5 @@ public class ExistingException extends BadRequestException {
     public ExistingException(String message) {
         super(message);
     }
+
 }

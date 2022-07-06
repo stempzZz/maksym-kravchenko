@@ -5,4 +5,5 @@ public class VerificationException extends BadRequestException {
     public VerificationException(String message) {
         super(message);
     }
+
 }

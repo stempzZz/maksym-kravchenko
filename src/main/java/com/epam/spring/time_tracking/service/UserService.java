@@ -1,10 +1,8 @@
 package com.epam.spring.time_tracking.service;
 
 import com.epam.spring.time_tracking.dto.activity.ActivityDto;
-import com.epam.spring.time_tracking.dto.activity.ActivityForAdminProfileDto;
 import com.epam.spring.time_tracking.dto.activity.ActivityForUserProfileDto;
 import com.epam.spring.time_tracking.dto.user.UserDto;
-import com.epam.spring.time_tracking.dto.user.UserInfoDto;
 
 import java.util.List;
 
@@ -29,4 +27,5 @@ public interface UserService {
     UserDto updateUserPassword(int userId, UserDto userDto);
 
     void deleteUser(int userId);
+
 }

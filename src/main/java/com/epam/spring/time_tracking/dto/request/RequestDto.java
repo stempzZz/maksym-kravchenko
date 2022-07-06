@@ -9,10 +9,12 @@ import java.time.LocalDateTime;
 
 @Data
 public class RequestDto {
+
     private int id;
     private UserOnlyNameDto user;
     private ActivityShortInfoDto activity;
     private Request.Status status;
     private boolean forDelete;
     private LocalDateTime createTime;
+
 }

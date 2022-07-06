@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {

@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class Category {
+
     private int id;
     private String nameEN;
     private String nameUA;
@@ -19,4 +20,5 @@ public class Category {
         this.nameEN = nameEN;
         this.nameUA = nameUA;
     }
+
 }

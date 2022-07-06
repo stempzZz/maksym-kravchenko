@@ -21,4 +21,5 @@ public interface ActivityMapper {
     ActivityDto toActivityDtoForAdminProfile(Activity activity);
 
     Activity fromActividtyDto(ActivityDto activityDto);
+
 }

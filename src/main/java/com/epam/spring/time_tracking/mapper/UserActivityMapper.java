@@ -21,4 +21,5 @@ public interface UserActivityMapper {
     @Mapping(source = "userActivity.activity.id", target = "id")
     @Mapping(source = "userActivity.activity.name", target = "name")
     ActivityForUserProfileDto toActivityForUserProfileDto(UserActivity userActivity);
+
 }

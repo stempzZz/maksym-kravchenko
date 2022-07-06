@@ -5,8 +5,10 @@ import lombok.Data;
 
 @Data
 public class ActivityForUserProfileDto {
+
     private int id;
     private String name;
     private double spentTime;
     private UserActivity.Status status;
+
 }

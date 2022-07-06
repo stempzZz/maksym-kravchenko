@@ -9,6 +9,7 @@ import java.util.Map;
 
 @Data
 public class Activity {
+
     private int id;
     private String name;
     private List<Category> categories;
@@ -47,4 +48,5 @@ public class Activity {
             return lookup.get(value);
         }
     }
+
 }
