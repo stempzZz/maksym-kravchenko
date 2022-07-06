@@ -14,4 +14,5 @@ public class User {
     private double spentTime;
     private boolean admin;
     private boolean blocked;
+
 }
