@@ -25,4 +25,5 @@ public class BeanE extends Bean {
     public void preDestroy() {
         System.out.println("BeanE: preDestroy()");
     }
+
 }

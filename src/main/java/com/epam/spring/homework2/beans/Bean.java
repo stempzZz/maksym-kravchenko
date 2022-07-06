@@ -1,6 +1,7 @@
 package com.epam.spring.homework2.beans;
 
 public abstract class Bean {
+
     private String name;
     private int value;
 
@@ -28,4 +29,5 @@ public abstract class Bean {
                 ", value=" + value +
                 '}';
     }
+
 }

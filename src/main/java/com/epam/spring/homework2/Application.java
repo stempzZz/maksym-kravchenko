@@ -6,6 +6,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import java.util.Arrays;
 
 public class Application {
+
     public static void main(String[] args) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(ConfigA.class);
 
@@ -22,4 +23,5 @@ public class Application {
 
         context.close();
     }
+
 }

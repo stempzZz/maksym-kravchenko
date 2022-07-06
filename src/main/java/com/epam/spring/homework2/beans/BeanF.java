@@ -14,4 +14,5 @@ public class BeanF extends Bean {
     public BeanF(String name, int value) {
         super(name, value);
     }
+
 }

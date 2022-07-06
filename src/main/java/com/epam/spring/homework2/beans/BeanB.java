@@ -24,4 +24,5 @@ public class BeanB extends Bean {
     public void destroyBeanB() {
         System.out.println("BeanB: destroyBeanB()");
     }
+
 }

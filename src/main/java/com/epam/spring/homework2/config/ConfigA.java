@@ -31,4 +31,5 @@ public class ConfigA {
     public BeanD beanD() {
         return new BeanD(env.getProperty("beanD.name"), Integer.parseInt(env.getProperty("beanD.value")));
     }
+
 }
