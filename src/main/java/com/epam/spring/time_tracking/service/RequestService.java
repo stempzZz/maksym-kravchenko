@@ -20,4 +20,5 @@ public interface RequestService {
     RequestDto declineRequest(int requestId);
 
     void deleteRequest(int requestId);
+
 }

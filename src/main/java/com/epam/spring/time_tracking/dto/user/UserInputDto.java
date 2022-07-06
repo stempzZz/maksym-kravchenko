@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class UserInputDto {
+
     private String lastName;
     private String firstName;
     private String email;
@@ -13,4 +14,5 @@ public class UserInputDto {
     private String password;
     private String repeatPassword;
     private boolean isAdmin;
+
 }

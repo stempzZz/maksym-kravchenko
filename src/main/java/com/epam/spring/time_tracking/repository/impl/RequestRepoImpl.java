@@ -122,4 +122,5 @@ public class RequestRepoImpl implements RequestRepo {
         log.info("Deleting requests with activity (id={})", activityId);
         requestList.removeIf(request -> request.getActivityId() == activityId);
     }
+
 }

@@ -27,4 +27,5 @@ public interface UserRepo {
     boolean checkIfUserExists(int userId);
 
     boolean checkIfUserIsAdmin(int userId);
+
 }

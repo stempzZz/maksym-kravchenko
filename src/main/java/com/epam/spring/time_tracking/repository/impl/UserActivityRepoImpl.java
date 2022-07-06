@@ -153,4 +153,5 @@ public class UserActivityRepoImpl implements UserActivityRepo {
             throw new RuntimeException("activity is not available or removed");
         }
     }
+
 }

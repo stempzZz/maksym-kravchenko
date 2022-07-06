@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 public class ActivityInputDto {
+
     private int id;
     private String name;
     private List<Integer> categoryIds;
@@ -15,4 +16,5 @@ public class ActivityInputDto {
     private int peopleCount;
     private int creatorId;
     private LocalDateTime createTime;
+
 }

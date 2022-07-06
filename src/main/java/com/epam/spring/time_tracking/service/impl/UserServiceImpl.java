@@ -125,4 +125,5 @@ public class UserServiceImpl implements UserService {
         userActivityRepo.removeUserFromActivities(userId);
         userRepo.deleteUser(userId);
     }
+
 }

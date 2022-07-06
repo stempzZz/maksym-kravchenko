@@ -106,4 +106,5 @@ public class ActivityRepoImpl implements ActivityRepo {
         if (!userRepo.checkIfUserExists(userId))
             throw new RuntimeException(errorMessage);
     }
+
 }

@@ -30,4 +30,5 @@ public interface UserService {
     UserDto updateUserPassword(int userId, UserInputDto userInputDto);
 
     void deleteUser(int userId);
+
 }

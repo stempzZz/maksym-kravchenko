@@ -22,4 +22,5 @@ public interface RequestRepo {
     void deleteRequest(int requestId);
 
     void deleteRequestsWithActivity(int activityId);
+
 }

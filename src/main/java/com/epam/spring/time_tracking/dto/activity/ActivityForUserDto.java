@@ -8,6 +8,7 @@ import java.util.List;
 
 @Data
 public class ActivityForUserDto {
+
     private int id;
     private String name;
     private List<CategoryDto> categories;
@@ -15,4 +16,5 @@ public class ActivityForUserDto {
     private String image;
     private int peopleCount;
     private LocalDateTime createTime;
+
 }

@@ -10,6 +10,7 @@ import java.util.Map;
 @Data
 @Builder
 public class UserActivity {
+
     private Activity activity;
     private User user;
     private LocalDateTime startTime;
@@ -44,4 +45,5 @@ public class UserActivity {
             return lookup.get(value);
         }
     }
+
 }

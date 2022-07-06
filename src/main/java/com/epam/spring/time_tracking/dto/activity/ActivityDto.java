@@ -9,6 +9,7 @@ import java.util.List;
 
 @Data
 public class ActivityDto {
+
     private int id;
     private String name;
     private List<CategoryDto> categories;
@@ -18,4 +19,5 @@ public class ActivityDto {
     private int creatorId;
     private LocalDateTime createTime;
     private Activity.Status status;
+
 }

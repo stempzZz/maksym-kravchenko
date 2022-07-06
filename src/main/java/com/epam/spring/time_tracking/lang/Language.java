@@ -1,6 +1,7 @@
 package com.epam.spring.time_tracking.lang;
 
 public enum Language {
+
     EN("en"),
     UA("uk");
 
@@ -13,4 +14,5 @@ public enum Language {
     public String getValue() {
         return value;
     }
+
 }

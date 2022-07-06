@@ -10,6 +10,7 @@ import java.util.Map;
 @Data
 @Builder
 public class Request {
+
     private int id;
     private int activityId;
     private Status status;
@@ -43,4 +44,5 @@ public class Request {
             return lookup.get(value);
         }
     }
+
 }

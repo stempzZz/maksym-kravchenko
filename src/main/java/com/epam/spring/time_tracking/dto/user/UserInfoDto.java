@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class UserInfoDto {
+
     private int id;
     private String lastName;
     private String firstName;
@@ -11,4 +12,5 @@ public class UserInfoDto {
     private double spentTime;
     private boolean isAdmin;
     private boolean isBlocked;
+
 }

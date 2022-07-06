@@ -59,4 +59,5 @@ public class CategoryServiceImpl implements CategoryService {
         activityRepo.deleteCategoryInActivities(categoryRepo.getCategory(categoryId));
         categoryRepo.deleteCategory(categoryId);
     }
+
 }
