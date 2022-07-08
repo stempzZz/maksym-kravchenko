@@ -1,9 +1,11 @@
 package com.epam.spring.time_tracking.repository.impl;
 
+import com.epam.spring.time_tracking.exception.NotFoundException;
 import com.epam.spring.time_tracking.model.Activity;
 import com.epam.spring.time_tracking.model.Request;
 import com.epam.spring.time_tracking.model.User;
 import com.epam.spring.time_tracking.model.UserActivity;
+import com.epam.spring.time_tracking.model.errors.ErrorMessage;
 import com.epam.spring.time_tracking.repository.ActivityRepo;
 import com.epam.spring.time_tracking.repository.RequestRepo;
 import com.epam.spring.time_tracking.repository.UserActivityRepo;
@@ -38,13 +40,13 @@ public class RequestRepoImpl implements RequestRepo {
         return requestList.stream()
                 .filter(r -> r.getId() == requestId)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("request is not found"));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.REQUEST_NOT_FOUND));
     }
 
     @Override
     public Request createRequestToAdd(Activity activity) {
         log.info("Creating request to add an activity: {}", activity);
-        Activity activityForAdd = activityRepo.createActivity(activity, true);
+        Activity activityForAdd = activityRepo.createActivity(activity);
         Request request = Request.builder()
                 .id(++idCounter)
                 .activityId(activityForAdd.getId())
@@ -113,7 +115,7 @@ public class RequestRepoImpl implements RequestRepo {
         Request request = getRequest(requestId);
         if ((request.isForDelete() && request.getStatus().equals(Request.Status.CONFIRMED)) ||
                 (!request.isForDelete() && !request.getStatus().equals(Request.Status.CONFIRMED)))
-            activityRepo.deleteActivity(request.getActivityId());
+            activityRepo.deleteActivityById(request.getActivityId());
         requestList.remove(request);
     }
 

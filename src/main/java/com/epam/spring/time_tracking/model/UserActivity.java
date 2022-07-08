@@ -28,9 +28,8 @@ public class UserActivity {
         private static final Map<String, Status> lookup = new HashMap<>();
 
         static {
-            for (UserActivity.Status s : UserActivity.Status.values()) {
+            for (UserActivity.Status s : UserActivity.Status.values())
                 lookup.put(s.getValue(), s);
-            }
         }
 
         Status(String value) {

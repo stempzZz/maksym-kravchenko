@@ -1,8 +1,11 @@
 package com.epam.spring.time_tracking.repository.impl;
 
+import com.epam.spring.time_tracking.exception.ExistingException;
+import com.epam.spring.time_tracking.exception.RestrictionException;
 import com.epam.spring.time_tracking.model.Activity;
 import com.epam.spring.time_tracking.model.User;
 import com.epam.spring.time_tracking.model.UserActivity;
+import com.epam.spring.time_tracking.model.errors.ErrorMessage;
 import com.epam.spring.time_tracking.repository.ActivityRepo;
 import com.epam.spring.time_tracking.repository.UserActivityRepo;
 import com.epam.spring.time_tracking.repository.UserRepo;
@@ -52,7 +55,7 @@ public class UserActivityRepoImpl implements UserActivityRepo {
                 .filter(userActivity -> userActivity.getActivity().getId() == activityId &&
                         userActivity.getUser().getId() == userId)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("user doesn't exist in activity"));
+                .orElseThrow(() -> new ExistingException(ErrorMessage.USER_DOES_NOT_EXIST_IN_ACTIVITY));
     }
 
     @Override
@@ -63,7 +66,7 @@ public class UserActivityRepoImpl implements UserActivityRepo {
         checkIfActivityIsAvailable(activity);
         User user = userRepo.getUserById(userId);
         if (user.isAdmin())
-            throw new RuntimeException("admin can't be in activity");
+            throw new ExistingException(ErrorMessage.ADMIN_CAN_NOT_BE_IN_ACTIVITY);
         UserActivity userActivity = UserActivity.builder()
                 .activity(activity)
                 .user(user)
@@ -142,7 +145,7 @@ public class UserActivityRepoImpl implements UserActivityRepo {
                         ua.getUser().getId() == userId)
                 .findFirst();
         if (userActivity.isPresent())
-            throw new RuntimeException("user is already in activity");
+            throw new ExistingException(ErrorMessage.USER_EXISTS_IN_ACTIVITY);
     }
 
     private void checkIfActivityIsAvailable(Activity activity) {
@@ -150,7 +153,7 @@ public class UserActivityRepoImpl implements UserActivityRepo {
         if (activity.getStatus().equals(Activity.Status.ADD_WAITING) ||
                 activity.getStatus().equals(Activity.Status.ADD_DECLINED) ||
                 activity.getStatus().equals(Activity.Status.DEL_CONFIRMED)) {
-            throw new RuntimeException("activity is not available or removed");
+            throw new RestrictionException(ErrorMessage.ACTIVITY_IS_NOT_AVAILABLE);
         }
     }
 

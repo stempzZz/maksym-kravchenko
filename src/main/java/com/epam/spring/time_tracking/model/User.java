@@ -12,7 +12,7 @@ public class User {
     private String password;
     private int activityCount;
     private double spentTime;
-    private boolean isAdmin;
-    private boolean isBlocked;
+    private boolean admin;
+    private boolean blocked;
 
 }

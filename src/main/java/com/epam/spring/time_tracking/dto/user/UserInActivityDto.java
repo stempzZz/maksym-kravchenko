@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class UserInActivityDto {
 
     private int activityId;
-    private UserDto user;
+    private UserOnlyNameDto user;
     private LocalDateTime startTime;
     private LocalDateTime stopTime;
     private double spentTime;
