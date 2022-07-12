@@ -17,7 +17,7 @@ public class Application {
 
         System.out.println("-------------------------");
 
-        Arrays.stream(beanNames).forEach(name -> System.out.println(context.getBean(name)));
+        Arrays.stream(beanNames).forEach(name -> System.out.println(context.getBeanDefinition(name)));
 
         System.out.println("-------------------------");
 
