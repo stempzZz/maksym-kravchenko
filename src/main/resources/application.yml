@@ -4,6 +4,19 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: true
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update # set 'create' for inserting init data from import.sql to DB
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+    url: jdbc:mysql://localhost:3306/time_tracking_v1_3?createDatabaseIfNotExist=true
 
 management:
   endpoints:
@@ -13,6 +26,11 @@ management:
   info:
     env:
       enabled: true
+
+logging:
+  level:
+    org.springframework.orm.jpa: DEBUG
+    org.springframework.transaction: DEBUG
 
 info:
   application:

@@ -1,6 +1,7 @@
 package com.epam.spring.time_tracking.mapper;
 
 import com.epam.spring.time_tracking.dto.user.UserDto;
+import com.epam.spring.time_tracking.dto.user.UserOnlyNameDto;
 import com.epam.spring.time_tracking.model.User;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
@@ -13,6 +14,8 @@ public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     UserDto toUserDto(User user);
+
+    UserOnlyNameDto toUserUserOnlyNameDto(User user);
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source = "id", target = "id")

@@ -1,37 +1,38 @@
 package com.epam.spring.time_tracking.service;
 
 import com.epam.spring.time_tracking.dto.activity.ActivityDto;
-import com.epam.spring.time_tracking.dto.user.UserDto;
 import com.epam.spring.time_tracking.dto.user.UserInActivityDto;
+import com.epam.spring.time_tracking.dto.user.UserOnlyNameDto;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface ActivityService {
 
-    List<ActivityDto> getActivities();
+    List<ActivityDto> getActivities(Pageable pageable);
 
-    ActivityDto getActivity(int activityId);
+    ActivityDto getActivity(Long activityId);
 
-    List<ActivityDto> getActivitiesForUser(int userId);
+    List<ActivityDto> getActivitiesForUser(Long userId, Pageable pageable);
 
     ActivityDto createActivity(ActivityDto activityDto);
 
-    List<UserInActivityDto> getActivityUsers(int activityId);
+    List<UserInActivityDto> getActivityUsers(Long activityId, Pageable pageable);
 
-    List<UserDto> getUsersNotInActivity(int activityId);
+    List<UserOnlyNameDto> getUsersNotInActivity(Long activityId);
 
-    UserInActivityDto getUserInActivity(int activityId, int userId);
+    UserInActivityDto getUserInActivity(Long activityId, Long userId);
 
-    UserInActivityDto addUserToActivity(int activityId, int userId);
+    UserInActivityDto addUserToActivity(Long activityId, Long userId);
 
-    void removeUserFromActivity(int activityId, int userId);
+    void removeUserFromActivity(Long activityId, Long userId);
 
-    UserInActivityDto startActivity(int activityId, int userId);
+    UserInActivityDto startActivity(Long activityId, Long userId);
 
-    UserInActivityDto stopActivity(int activityId, int userId);
+    UserInActivityDto stopActivity(Long activityId, Long userId);
 
-    ActivityDto updateActivity(int activityId, ActivityDto activityDto);
+    ActivityDto updateActivity(Long activityId, ActivityDto activityDto);
 
-    void deleteActivity(int activityId);
+    void deleteActivity(Long activityId);
 
 }

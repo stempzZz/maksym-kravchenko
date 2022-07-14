@@ -10,7 +10,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ActivityShortInfoDto {
 
-    private int id;
+    private Long id;
     private String name;
     private List<CategoryDto> categories;
     private String description;

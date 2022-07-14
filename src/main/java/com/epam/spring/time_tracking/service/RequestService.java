@@ -2,23 +2,25 @@ package com.epam.spring.time_tracking.service;
 
 import com.epam.spring.time_tracking.dto.activity.ActivityDto;
 import com.epam.spring.time_tracking.dto.request.RequestDto;
+import com.epam.spring.time_tracking.dto.request.RequestForListDto;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface RequestService {
 
-    List<RequestDto> getRequests();
+    List<RequestForListDto> getRequests(Pageable pageable);
 
-    RequestDto getRequest(int requestId);
+    RequestDto getRequest(Long requestId);
 
     RequestDto createRequestToAdd(ActivityDto activityDto);
 
-    RequestDto createRequestToRemove(int activityId);
+    RequestDto createRequestToRemove(Long activityId);
 
-    RequestDto confirmRequest(int requestId);
+    RequestDto confirmRequest(Long requestId);
 
-    RequestDto declineRequest(int requestId);
+    RequestDto declineRequest(Long requestId);
 
-    void deleteRequest(int requestId);
+    void deleteRequest(Long requestId);
 
 }

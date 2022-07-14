@@ -1,14 +1,14 @@
 package com.epam.spring.time_tracking.exception;
 
-public class ExistingException extends BadRequestException {
+public class ExistenceException extends BadRequestException {
 
     private static final String DEFAULT_MESSAGE = "Entity already exists!";
 
-    public ExistingException() {
+    public ExistenceException() {
         super(DEFAULT_MESSAGE);
     }
 
-    public ExistingException(String message) {
+    public ExistenceException(String message) {
         super(message);
     }
 

@@ -1,24 +1,37 @@
 package com.epam.spring.time_tracking.model;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-@Data
-@Builder
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@NamedNativeQuery(name = "Category.findByIsDefault",
+        query = "select * from category where is_default = ?1", resultClass = Category.class)
 public class Category {
 
-    private int id;
-    private String nameEN;
-    private String nameUA;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public Category() {
+    @Column(unique = true, nullable = false)
+    private String nameEn;
 
-    }
+    @Column(unique = true, nullable = false)
+    private String nameUa;
 
-    public Category(int id, String nameEN, String nameUA) {
-        this.id = id;
-        this.nameEN = nameEN;
-        this.nameUA = nameUA;
-    }
+    private boolean isDefault = false;
+
+    @ManyToMany(mappedBy = "categories")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
+    private List<Activity> activities;
 
 }

@@ -1,6 +1,6 @@
 package com.epam.spring.time_tracking.dto.user;
 
-import com.epam.spring.time_tracking.model.UserActivity;
+import com.epam.spring.time_tracking.model.enums.status.ActivityUserStatus;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -8,11 +8,11 @@ import java.time.LocalDateTime;
 @Data
 public class UserInActivityDto {
 
-    private int activityId;
+    private Long activityId;
     private UserOnlyNameDto user;
     private LocalDateTime startTime;
     private LocalDateTime stopTime;
     private double spentTime;
-    private UserActivity.Status status;
+    private ActivityUserStatus status;
 
 }
