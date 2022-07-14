@@ -11,6 +11,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -25,7 +28,7 @@ public interface UserApi {
     @ApiOperation("Get all users")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    public List<UserDto> getUsers();
+    List<UserDto> getUsers(@PageableDefault(sort = {"lastName", "firstName"}) Pageable pageable);
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", paramType = "path", required = true, value = "User id")
@@ -33,17 +36,17 @@ public interface UserApi {
     @ApiOperation("Get user")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{userId}")
-    public UserDto getUser(@PathVariable int userId);
+    UserDto getUser(@PathVariable Long userId);
 
     @ApiOperation("Register user")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
-    public UserDto createUser(@RequestBody @Validated(OnCreate.class) UserDto userDto);
+    UserDto createUser(@RequestBody @Validated(OnCreate.class) UserDto userDto);
 
     @ApiOperation("Authorize user")
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/auth")
-    public UserDto authUser(@RequestBody @Validated(OnAuthorization.class) UserDto userDto);
+    UserDto authUser(@RequestBody @Validated(OnAuthorization.class) UserDto userDto);
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", paramType = "path", required = true, value = "User id")
@@ -51,7 +54,8 @@ public interface UserApi {
     @ApiOperation("Get user's activities for profile")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{userId}/activity")
-    public List<ActivityForUserProfileDto> getUserActivitiesForProfile(@PathVariable int userId);
+    List<ActivityForUserProfileDto> getUserActivitiesForProfile(@PathVariable Long userId,
+                                                                @PageableDefault(sort = "spentTime", size = 5, direction = Direction.DESC) Pageable pageable);
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", paramType = "path", required = true, value = "User id")
@@ -59,7 +63,8 @@ public interface UserApi {
     @ApiOperation("Get admin's activities for profile")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/admin/{userId}/activity")
-    public List<ActivityDto> getAdminActivitiesForProfile(@PathVariable int userId);
+    List<ActivityDto> getAdminActivitiesForProfile(@PathVariable Long userId,
+                                                   @PageableDefault(sort = "name", size = 5) Pageable pageable);
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", paramType = "path", required = true, value = "User id"),
@@ -68,7 +73,7 @@ public interface UserApi {
     @ApiOperation("Block/unblock user")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{userId}/block/{isBlocked}")
-    public UserDto blockUser(@PathVariable int userId, @PathVariable boolean isBlocked);
+    UserDto blockUser(@PathVariable Long userId, @PathVariable boolean isBlocked);
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", paramType = "path", required = true, value = "User id")
@@ -76,7 +81,7 @@ public interface UserApi {
     @ApiOperation("Update user's information")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{userId}/info")
-    public UserDto updateUserInfo(@PathVariable int userId, @RequestBody @Validated(OnUpdate.class) UserDto userDto);
+    UserDto updateUserInfo(@PathVariable Long userId, @RequestBody @Validated(OnUpdate.class) UserDto userDto);
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", paramType = "path", required = true, value = "User id")
@@ -84,7 +89,7 @@ public interface UserApi {
     @ApiOperation("Update user's password")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{userId}/password")
-    public UserDto updateUserPassword(@PathVariable int userId, @RequestBody @Validated(OnUpdatePassword.class) UserDto userDto);
+    UserDto updateUserPassword(@PathVariable Long userId, @RequestBody @Validated(OnUpdatePassword.class) UserDto userDto);
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", paramType = "path", required = true, value = "User id")
@@ -92,6 +97,6 @@ public interface UserApi {
     @ApiOperation("Delete user")
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable int userId);
+    ResponseEntity<Void> deleteUser(@PathVariable Long userId);
 
 }

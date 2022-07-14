@@ -1,52 +1,54 @@
 package com.epam.spring.time_tracking.model;
 
-import lombok.Data;
+import com.epam.spring.time_tracking.model.enums.status.ActivityStatus;
+import lombok.*;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-@Data
+@Entity
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class Activity {
 
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
     private String name;
-    private List<Category> categories;
+
+    @Column(nullable = false)
     private String description;
+
     private String image;
-    private int peopleCount;
-    private int creatorId;
-    private LocalDateTime createTime;
-    private Status status;
 
-    public enum Status {
-        BY_ADMIN("BY_ADMIN"),
-        BY_USER("BY_USER"),
-        ADD_WAITING("ADD_WAITING"),
-        ADD_DECLINED("ADD_DECLINED"),
-        DEL_WAITING("DEL_WAITING"),
-        DEL_CONFIRMED("DEL_CONFIRMED");
+    @Column(nullable = false)
+    private int peopleCount = 0;
 
-        private final String value;
-        private static final Map<String, Status> lookup = new HashMap<>();
+    @Column(nullable = false)
+    private LocalDateTime createTime = LocalDateTime.now();
 
-        static {
-            for (Status s : Status.values())
-                lookup.put(s.getValue(), s);
-        }
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ActivityStatus status;
 
-        Status(String value) {
-            this.value = value;
-        }
+    @ManyToOne(optional = false)
+    private User creator;
 
-        public String getValue() {
-            return value;
-        }
+    @ManyToMany
+    @JoinTable(name = "activity_category",
+            joinColumns = @JoinColumn(name = "activity_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    @ToString.Exclude
+    private List<Category> categories;
 
-        public static Status get(String value) {
-            return lookup.get(value);
-        }
-    }
+    @OneToMany(mappedBy = "activity", orphanRemoval = true)
+    @ToString.Exclude
+    private List<ActivityUser> users;
 
 }

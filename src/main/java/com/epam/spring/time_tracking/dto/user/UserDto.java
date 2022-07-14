@@ -18,7 +18,7 @@ import javax.validation.constraints.Null;
 public class UserDto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private int id;
+    private Long id;
 
     @NotBlank(message = "{validation.not_blank.last_name}", groups = {OnCreate.class, OnUpdate.class})
     @Null(message = "{validation.null.last_name}", groups = {OnUpdatePassword.class, OnAuthorization.class})
@@ -39,7 +39,7 @@ public class UserDto {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Password(groups = {OnCreate.class, OnUpdatePassword.class})
-    @NotBlank(message = "{validation.not_blank.password}", groups = {OnCreate.class, OnUpdatePassword.class, OnAuthorization.class})
+    @NotBlank(message = "{validation.not_blank.password}", groups = OnAuthorization.class)
     @Null(message = "{validation.null.password}", groups = OnUpdate.class)
     private String password;
 

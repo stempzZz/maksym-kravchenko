@@ -7,6 +7,7 @@ import com.epam.spring.time_tracking.dto.user.UserDto;
 import com.epam.spring.time_tracking.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,13 +21,13 @@ public class UserController implements UserApi {
     private final UserService userService;
 
     @Override
-    public List<UserDto> getUsers() {
+    public List<UserDto> getUsers(Pageable pageable) {
         log.info("Getting users");
-        return userService.getUsers();
+        return userService.getUsers(pageable);
     }
 
     @Override
-    public UserDto getUser(int userId) {
+    public UserDto getUser(Long userId) {
         log.info("Getting user with id: {}", userId);
         return userService.getUser(userId);
     }
@@ -44,37 +45,37 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public List<ActivityForUserProfileDto> getUserActivitiesForProfile(int userId) {
+    public List<ActivityForUserProfileDto> getUserActivitiesForProfile(Long userId, Pageable pageable) {
         log.info("Getting activities for user's profile, who has an id: {}", userId);
-        return userService.getUserActivitiesForProfile(userId);
+        return userService.getUserActivitiesForProfile(userId, pageable);
     }
 
     @Override
-    public List<ActivityDto> getAdminActivitiesForProfile(int userId) {
+    public List<ActivityDto> getAdminActivitiesForProfile(Long userId, Pageable pageable) {
         log.info("Getting activities for admin's profile, who has an id: {}", userId);
-        return userService.getAdminActivitiesForProfile(userId);
+        return userService.getAdminActivitiesForProfile(userId, pageable);
     }
 
     @Override
-    public UserDto blockUser(int userId, boolean isBlocked) {
+    public UserDto blockUser(Long userId, boolean isBlocked) {
         log.info("Blocking user (id={}) with value: {}", userId, isBlocked);
         return userService.blockUser(userId, isBlocked);
     }
 
     @Override
-    public UserDto updateUserInfo(int userId, UserDto userDto) {
+    public UserDto updateUserInfo(Long userId, UserDto userDto) {
         log.info("Updating user's (id={}) information: {}", userId, userDto);
         return userService.updateUserInfo(userId, userDto);
     }
 
     @Override
-    public UserDto updateUserPassword(int userId, UserDto userDto) {
+    public UserDto updateUserPassword(Long userId, UserDto userDto) {
         log.info("Updating user's (id={}) password: {}", userId, userDto);
         return userService.updateUserPassword(userId, userDto);
     }
 
     @Override
-    public ResponseEntity<Void> deleteUser(int userId) {
+    public ResponseEntity<Void> deleteUser(Long userId) {
         log.info("Deleting user with id: {}", userId);
         userService.deleteUser(userId);
         return ResponseEntity.noContent().build();

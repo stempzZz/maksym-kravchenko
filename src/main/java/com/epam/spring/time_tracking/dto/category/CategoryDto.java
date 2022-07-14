@@ -9,12 +9,12 @@ import javax.validation.constraints.NotBlank;
 public class CategoryDto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private int id;
+    private Long id;
 
     @NotBlank(message = "{validation.not_blank.name_en}")
-    private String nameEN;
+    private String nameEn;
 
     @NotBlank(message = "{validation.not_blank.name_ua}")
-    private String nameUA;
+    private String nameUa;
 
 }

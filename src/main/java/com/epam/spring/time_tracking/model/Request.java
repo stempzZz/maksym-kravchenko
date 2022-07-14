@@ -1,47 +1,36 @@
 package com.epam.spring.time_tracking.model;
 
-import lombok.Builder;
-import lombok.Data;
+import com.epam.spring.time_tracking.model.enums.status.RequestStatus;
+import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
-@Data
-@Builder
+@Entity
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class Request {
 
-    private int id;
-    private int activityId;
-    private Status status;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private RequestStatus status;
+
     private boolean forDelete;
-    private LocalDateTime createTime;
 
-    public enum Status {
-        WAITING("WAITING"),
-        CONFIRMED("CONFIRMED"),
-        DECLINED("DECLINED");
+    @Column(nullable = false)
+    private LocalDateTime createTime = LocalDateTime.now();
 
-        private final String value;
-
-        private static final Map<String, Status> lookup = new HashMap<>();
-
-        static {
-            for (Request.Status s : Request.Status.values())
-                lookup.put(s.getValue(), s);
-        }
-
-        Status(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public static Request.Status get(String value) {
-            return lookup.get(value);
-        }
-    }
+    @ManyToOne(optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Activity activity;
 
 }

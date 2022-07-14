@@ -1,19 +1,18 @@
 package com.epam.spring.time_tracking.repository;
 
 import com.epam.spring.time_tracking.model.Category;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
-public interface CategoryRepo {
+@Repository
+public interface CategoryRepo extends JpaRepository<Category, Long> {
 
-    List<Category> getCategories();
+    Optional<Category> findByIsDefault(boolean isDefault);
 
-    Category getCategory(int categoryId);
+    boolean existsByNameEn(String nameEn);
 
-    Category createCategory(Category category);
-
-    Category updateCategory(int categoryId, Category category);
-
-    void deleteCategory(int categoryId);
+    boolean existsByNameUa(String nameUa);
 
 }

@@ -3,7 +3,7 @@ package com.epam.spring.time_tracking.dto.activity;
 import com.epam.spring.time_tracking.dto.category.CategoryDto;
 import com.epam.spring.time_tracking.dto.group.OnCreate;
 import com.epam.spring.time_tracking.dto.group.OnUpdate;
-import com.epam.spring.time_tracking.model.Activity;
+import com.epam.spring.time_tracking.model.enums.status.ActivityStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -19,12 +19,12 @@ import java.util.List;
 public class ActivityDto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private int id;
+    private Long id;
 
     @NotBlank(message = "{validation.not_blank.name}")
     private String name;
 
-    private List<Integer> categoryIds;
+    private List<Long> categoryIds;
 
     @Null(message = "{validation.null.categories}")
     private List<CategoryDto> categories;
@@ -38,12 +38,12 @@ public class ActivityDto {
     private int peopleCount;
 
     @NotNull(message = "'creatorId' shouldn't be empty", groups = OnCreate.class)
-    private int creatorId;
+    private Long creatorId;
 
     @Null(message = "{validation.null.create_time}", groups = {OnCreate.class, OnUpdate.class})
     private LocalDateTime createTime;
 
     @Null(message = "{validation.null.status}", groups = {OnCreate.class, OnUpdate.class})
-    private Activity.Status status;
+    private ActivityStatus status;
 
 }

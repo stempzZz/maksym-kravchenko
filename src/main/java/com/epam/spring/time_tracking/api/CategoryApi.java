@@ -1,10 +1,13 @@
 package com.epam.spring.time_tracking.api;
 
 import com.epam.spring.time_tracking.dto.category.CategoryDto;
+import com.epam.spring.time_tracking.dto.category.CategoryForListDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +22,7 @@ public interface CategoryApi {
     @ApiOperation("Get all categories")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    List<CategoryDto> getCategories();
+    List<CategoryForListDto> getCategories(@PageableDefault(sort = "nameEn") Pageable pageable);
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "categoryId", paramType = "path", required = true, value = "Category id")
@@ -27,7 +30,7 @@ public interface CategoryApi {
     @ApiOperation("Get category")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{categoryId}")
-    CategoryDto getCategory(@PathVariable int categoryId);
+    CategoryDto getCategory(@PathVariable Long categoryId);
 
     @ApiOperation("Create category")
     @ResponseStatus(HttpStatus.CREATED)
@@ -40,7 +43,7 @@ public interface CategoryApi {
     @ApiOperation("Update category")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{categoryId}")
-    CategoryDto updateCategory(@PathVariable int categoryId, @RequestBody @Valid CategoryDto categoryDto);
+    CategoryDto updateCategory(@PathVariable Long categoryId, @RequestBody @Valid CategoryDto categoryDto);
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "categoryId", paramType = "path", required = true, value = "Category id")
@@ -48,6 +51,6 @@ public interface CategoryApi {
     @ApiOperation("Delete category")
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{categoryId}")
-    ResponseEntity<Void> deleteCategory(@PathVariable int categoryId);
+    ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId);
 
 }
