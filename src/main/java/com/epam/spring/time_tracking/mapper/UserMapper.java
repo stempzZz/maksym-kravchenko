@@ -15,7 +15,7 @@ public interface UserMapper {
 
     UserDto toUserDto(User user);
 
-    UserOnlyNameDto toUserUserOnlyNameDto(User user);
+    UserOnlyNameDto toUserOnlyNameDto(User user);
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source = "id", target = "id")

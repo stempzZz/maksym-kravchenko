@@ -26,6 +26,7 @@ public abstract class ErrorMessage {
     public static final String CREATOR_IS_NOT_A_REGULAR_USER = "Creator is not a regular user!";
     public static final String INSTANTLY_ACTIVITY_CREATION = "For instantly activity creation, creator must be an admin!";
     public static final String ACTIVITY_IS_NOT_AVAILABLE = "Activity is not available or removed!";
+    public static final String ACTIVITY_IS_NOT_BY_USER = "Request can only be created for an activity with a 'BY_USER' status!";
 
     // VerificationException messages
     public static final String PASSWORD_CONFIRMATION_IS_FAILED = "Password confirmation is failed!";

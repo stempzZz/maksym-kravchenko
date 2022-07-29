@@ -18,19 +18,19 @@ import java.time.LocalDateTime;
 public class ActivityUser {
 
     @EmbeddedId
-    ActivityUserKey id = new ActivityUserKey();
+    private ActivityUserKey id = new ActivityUserKey();
 
     @ManyToOne
     @MapsId("activityId")
     @JoinColumn(name = "activity_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    Activity activity;
+    private Activity activity;
 
     @ManyToOne
     @MapsId("userId")
     @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    User user;
+    private User user;
 
     private LocalDateTime startTime;
 

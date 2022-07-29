@@ -49,7 +49,6 @@ public interface CategoryApi {
             @ApiImplicitParam(name = "categoryId", paramType = "path", required = true, value = "Category id")
     })
     @ApiOperation("Delete category")
-    @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{categoryId}")
     ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId);
 

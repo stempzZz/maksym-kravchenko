@@ -118,7 +118,7 @@ public class ActivityServiceImpl implements ActivityService {
 
         List<User> users = userRepo.findAllNotInActivity(activity);
         return users.stream()
-                .map(UserMapper.INSTANCE::toUserUserOnlyNameDto)
+                .map(UserMapper.INSTANCE::toUserOnlyNameDto)
                 .collect(Collectors.toList());
     }
 
@@ -169,13 +169,7 @@ public class ActivityServiceImpl implements ActivityService {
     public void removeUserFromActivity(Long activityId, Long userId) {
         log.info("Removing user (id={}) from an activity with id: {}", userId, activityId);
 
-        Activity activity = activityRepo.findById(activityId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.ACTIVITY_NOT_FOUND));
-        User user = userRepo.findById(userId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.USER_NOT_FOUND));
-        ActivityUser activityUser = activityUserRepo.findById(new ActivityUserKey(activity.getId(), user.getId()))
-                .orElseThrow(() -> new ExistenceException(ErrorMessage.USER_DOES_NOT_EXIST_IN_ACTIVITY));
-
+        ActivityUser activityUser = getActivityUser(activityId, userId);
         activityUser.getActivity().setPeopleCount(activityUser.getActivity().getPeopleCount() - 1);
         activityUser.getUser().setActivityCount(activityUser.getUser().getActivityCount() - 1);
 

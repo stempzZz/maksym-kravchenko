@@ -98,8 +98,15 @@ public class CategoryServiceImpl implements CategoryService {
         if (category.isDefault())
             throw new CategoryIsDefaultException();
 
-        List<Activity> activities = setDefaultIfContainsOneForCategoryActivities(category);
-        category.setActivities(activities);
+        category.getActivities().forEach(activity -> {
+            if (activity.getCategories().size() <= 1) {
+                activity.getCategories().clear();
+                activity.getCategories().add(categoryRepo.findByIsDefault(true)
+                        .orElseThrow(() -> new NotFoundException(ErrorMessage.CATEGORY_NOT_FOUND)));
+            } else {
+                activity.getCategories().removeIf(c -> c.getId().equals(category.getId()));
+            }
+        });
 
         categoryRepo.delete(category);
         log.info("Category (id={}) is deleted", categoryId);
@@ -107,7 +114,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> mapCategoriesIdsToCategories(List<Long> categoriesIds) {
-        Category defaultCategory = getDefaultCategory();
+        Category defaultCategory = categoryRepo.findByIsDefault(true)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.CATEGORY_NOT_FOUND));
 
         if (categoriesIds == null || categoriesIds.isEmpty() ||
                 (categoriesIds.size() == 1 && categoriesIds.contains(defaultCategory.getId()))) {
@@ -119,21 +127,6 @@ public class CategoryServiceImpl implements CategoryService {
                 .filter(categoryId -> !categoryId.equals(defaultCategory.getId()))
                 .map(categoryId -> categoryRepo.findById(categoryId)
                         .orElseThrow(() -> new NotFoundException(ErrorMessage.CATEGORY_NOT_FOUND)))
-                .collect(Collectors.toList());
-    }
-
-    private Category getDefaultCategory() {
-        return categoryRepo.findByIsDefault(true)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.CATEGORY_NOT_FOUND));
-    }
-
-    private List<Activity> setDefaultIfContainsOneForCategoryActivities(Category category) {
-        return category.getActivities().stream()
-                .filter(activity -> activity.getCategories().size() == 1 && activity.getCategories().contains(category))
-                .peek(activity -> {
-                    activity.getCategories().clear();
-                    activity.setCategories(List.of(getDefaultCategory()));
-                })
                 .collect(Collectors.toList());
     }
 

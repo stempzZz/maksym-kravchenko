@@ -97,6 +97,9 @@ public class RequestServiceImpl implements RequestService {
                 activity.getStatus().equals(ActivityStatus.ADD_DECLINED) ||
                 activity.getStatus().equals(ActivityStatus.DEL_CONFIRMED))
             throw new RestrictionException(ErrorMessage.ACTIVITY_IS_NOT_AVAILABLE);
+        else if (activity.getStatus().equals(ActivityStatus.BY_ADMIN))
+            throw new RestrictionException(ErrorMessage.ACTIVITY_IS_NOT_BY_USER);
+
         if (activity.getCreator().isAdmin())
             throw new RestrictionException(ErrorMessage.CREATOR_IS_NOT_A_REGULAR_USER);
         if (requestRepo.requestForDeleteWithActivityExists(activity))
