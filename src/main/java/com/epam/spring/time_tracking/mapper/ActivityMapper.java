@@ -23,11 +23,6 @@ public interface ActivityMapper {
     ActivityDto toActivityDtoForAdminProfile(Activity activity);
 
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(source = "id", target = "id")
-    @Mapping(source = "name", target = "name")
-    ActivityShortInfoDto toActivityShortInfoDto(Activity activity);
-
-    @BeanMapping(ignoreByDefault = true)
     @Mapping(source = "name", target = "name")
     @Mapping(source = "description", target = "description")
     @Mapping(source = "image", target = "image")

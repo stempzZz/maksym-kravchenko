@@ -68,7 +68,6 @@ public interface RequestApi {
             @ApiImplicitParam(name = "requestId", paramType = "path", required = true, value = "Request id")
     })
     @ApiOperation("Delete request")
-    @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{requestId}")
     ResponseEntity<Void> deleteRequest(@PathVariable Long requestId);
 

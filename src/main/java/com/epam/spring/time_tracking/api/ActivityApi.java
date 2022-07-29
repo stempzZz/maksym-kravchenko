@@ -1,6 +1,8 @@
 package com.epam.spring.time_tracking.api;
 
 import com.epam.spring.time_tracking.dto.activity.ActivityDto;
+import com.epam.spring.time_tracking.dto.group.OnCreate;
+import com.epam.spring.time_tracking.dto.group.OnUpdate;
 import com.epam.spring.time_tracking.dto.user.UserInActivityDto;
 import com.epam.spring.time_tracking.dto.user.UserOnlyNameDto;
 import io.swagger.annotations.Api;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -46,7 +49,7 @@ public interface ActivityApi {
     @ApiOperation("Create activity")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    ActivityDto createActivity(@RequestBody @Valid ActivityDto activityDto);
+    ActivityDto createActivity(@RequestBody @Validated(OnCreate.class) ActivityDto activityDto);
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "activityId", paramType = "path", required = true, value = "Activity id")
@@ -88,7 +91,6 @@ public interface ActivityApi {
             @ApiImplicitParam(name = "userId", paramType = "path", required = true, value = "User id")
     })
     @ApiOperation("Remove user from activity")
-    @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{activityId}/user/{userId}")
     ResponseEntity<Void> removeUserFromActivity(@PathVariable Long activityId, @PathVariable Long userId);
 
@@ -116,7 +118,7 @@ public interface ActivityApi {
     @ApiOperation("Update activity")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{activityId}")
-    ActivityDto updateActivity(@PathVariable Long activityId, @RequestBody @Valid ActivityDto activityDto);
+    ActivityDto updateActivity(@PathVariable Long activityId, @RequestBody @Validated(OnUpdate.class) ActivityDto activityDto);
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "activityId", paramType = "path", required = true, value = "Activity id")

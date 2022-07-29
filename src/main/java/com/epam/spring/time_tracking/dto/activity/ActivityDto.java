@@ -37,7 +37,8 @@ public class ActivityDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int peopleCount;
 
-    @NotNull(message = "'creatorId' shouldn't be empty", groups = OnCreate.class)
+    @NotNull(message = "{validation.not_null.creator_id}", groups = OnCreate.class)
+    @Null(message = "{validation.null.creator_id}", groups = OnUpdate.class)
     private Long creatorId;
 
     @Null(message = "{validation.null.create_time}", groups = {OnCreate.class, OnUpdate.class})

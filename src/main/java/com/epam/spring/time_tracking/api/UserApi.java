@@ -95,7 +95,6 @@ public interface UserApi {
             @ApiImplicitParam(name = "userId", paramType = "path", required = true, value = "User id")
     })
     @ApiOperation("Delete user")
-    @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{userId}")
     ResponseEntity<Void> deleteUser(@PathVariable Long userId);
 
